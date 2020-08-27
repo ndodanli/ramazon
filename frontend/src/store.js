@@ -18,8 +18,8 @@ const userInfo = Cookie.getJSON("userInfo") || null;
 const initialState = {
   cart: { cartItems, shipping: {}, payment: {} },
   userSignin: { userInfo },
-  productList: { loading: true, products: [] },
-  productDetails: { loading: true, product: {} },
+  productList: { products: [] },
+  productDetails: { product: {} },
 };
 const reducer = combineReducers({
   productList: productListReducer,

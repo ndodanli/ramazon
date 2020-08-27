@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { signin } from "../actions/userActions";
+import Axios from "axios";
 function SigninScreen(props) {
-  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const userSignin = useSelector((state) => state.userSignin);
   const { loading, userInfo, error } = userSignin;
@@ -19,11 +20,22 @@ function SigninScreen(props) {
   }, [userInfo]);
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(signin(email, password));
+    dispatch(signin(userName, password));
   };
   console.log("loading", loading);
+  const sessionTest = () => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "/user",
+    }).then((res) => {
+      console.log(res.data);
+    });
+  };
+  
   return (
     <div className="form">
+      <button onClick={sessionTest}>TEST</button>
       <form onSubmit={submitHandler}>
         <ul className="form-container">
           <li>
@@ -34,12 +46,12 @@ function SigninScreen(props) {
             {error && <div>{error}</div>}
           </li>
           <li>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Username</label>
             <input
-              type="email"
-              name="email"
-              id="email"
-              onChange={(e) => setEmail(e.target.value)}
+              type="username"
+              name="username"
+              id="username"
+              onChange={(e) => setUserName(e.target.value)}
             />
           </li>
           <li>
@@ -58,7 +70,12 @@ function SigninScreen(props) {
           </li>
           <li>New to amazona?</li>
           <li>
-            <Link to={redirect === "/" ? "register": "register?redirect=" + redirect} className="button secondary text-center">
+            <Link
+              to={
+                redirect === "/" ? "register" : "register?redirect=" + redirect
+              }
+              className="button secondary text-center"
+            >
               Create your amazona account
             </Link>
           </li>

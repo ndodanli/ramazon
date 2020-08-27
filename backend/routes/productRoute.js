@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
     res.send(404).status.send({ message: "Product Not Found" });
   }
 });
-router.post("/", isAuth, isAdmin, async (req, res) => {
+router.post("/", isAuth, async (req, res) => {
   const product = new Product({
     name: req.body.name,
     price: req.body.price,

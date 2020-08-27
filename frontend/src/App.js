@@ -22,6 +22,7 @@ import CartSection from "./components/CartSection";
 import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import LinkLoading from "./components/LinkLoading";
+import LoginScreen from "./screens/LoginScreen";
 export const LoadContext = React.createContext();
 
 function App(props) {
@@ -134,6 +135,8 @@ function App(props) {
           <Route path="/signin" component={SigninScreen} />
           <Route path="/product/:id" component={ProductScreen} />
           <Route path="/cart/:id?" component={CartScreen} />
+          <Route path="/login" component={LoginScreen} />
+          {/* <Route path="/oauth_callback" component={LoginCallback} /> */}
           <Route
             path={["/search", "/"]}
             exact

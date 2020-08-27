@@ -1,45 +1,45 @@
 import express from "express";
 import User from "../models/userModel";
-import { getToken, isAuth } from '../util';
+import passPortConfig from "../passportConfig"
+import { getToken, isAuth } from "../util";
 const router = express.Router();
-const cors = require("cors");
-router.use(cors());
-router.post("/signin", async (req, res) => {
-  const signinUser = await User.findOne({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  if (signinUser) {
-    res.send({
-      _id: signinUser._id,
-      name: signinUser.name,
-      email: signinUser.email,
-      isAdmin: signinUser.isAdmin,
-      token: getToken(signinUser)
-    });
-  } else {
-    res.status(401).json({message:'Invalid Email or Password.'});
-  }
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
+
+
+router.post("/signin", (req, res, next) => {
+  req.session.
+  passport.authenticate("local", (err, user, info) => {
+    if (err) throw err;
+    if (!user) res.send("No User Exists");
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        res.send("Successfully Authenticated");
+        console.log(req.user);
+      });
+    }
+  })(req, res, next);
 });
 
+router.get("/user", (req, res) => {
+  res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
+});
 router.post("/register", async (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
+  User.findOne({ username: req.body.userName, email: req.body.email }, async (err, doc) => {
+    if (err) throw err;
+    if (doc) res.send("User already exists");
+    if (!doc) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);      const newUser = new User({
+        username: req.body.userName,
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+      });
+      await newUser.save();
+      res.send("User Created");
+    }
   });
-  const newUser = user.save()
-  if (newUser) {
-    res.send({
-      _id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      isAdmin: newUser.isAdmin,
-      token: getToken(newUser)
-    });
-  } else {
-    res.status(401).json({message:'Invalid user data.'});
-  }
 });
 router.get("/createadmin", async (req, res) => {
   try {

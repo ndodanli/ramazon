@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { register } from "../actions/userActions";
 function RegisterScreen(props) {
+  const [userName, setUserName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,8 +12,8 @@ function RegisterScreen(props) {
   const { loading, userInfo, error } = userRegister;
   const dispatch = useDispatch();
   const redirect = props.location.search
-  ? props.location.search.split("=")[1]
-  : "/";
+    ? props.location.search.split("=")[1]
+    : "/";
   useEffect(() => {
     if (userInfo) {
       props.history.push(redirect);
@@ -21,7 +22,7 @@ function RegisterScreen(props) {
   }, [userInfo]);
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(register(name, email, password));
+    dispatch(register(userName, email, name, password));
   };
   console.log("loading", loading);
   return (
@@ -34,6 +35,15 @@ function RegisterScreen(props) {
           <li>
             {loading && <div>Loading...</div>}
             {error && <div>{error}</div>}
+          </li>
+          <li>
+            <label htmlFor="userName">Username</label>
+            <input
+              type="text"
+              name="userName"
+              id="userName"
+              onChange={(e) => setUserName(e.target.value)}
+            />
           </li>
           <li>
             <label htmlFor="name">Name</label>
@@ -80,12 +90,9 @@ function RegisterScreen(props) {
           <li>
             Already have an accout?{" "}
             <Link
-              to={
-                redirect === "/" ? "signin" : "signin?redirect=" + redirect
-              }
+              to={redirect === "/" ? "signin" : "signin?redirect=" + redirect}
               className="button secondary text-center"
-            >
-            </Link>
+            ></Link>
           </li>
         </ul>
       </form>

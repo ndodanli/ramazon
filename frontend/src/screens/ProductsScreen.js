@@ -44,7 +44,6 @@ function ProductsScreen(props) {
   
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("successSave", successSave);
     if (successSave) {
       setModalVisible(false);
     }
