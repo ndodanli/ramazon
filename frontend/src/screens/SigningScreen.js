@@ -35,7 +35,7 @@ function SigninScreen(props) {
   
   return (
     <div className="form">
-      <button onClick={sessionTest}>TEST</button>
+      <button onClick={() => sessionTest()}>TEST</button>
       <form onSubmit={submitHandler}>
         <ul className="form-container">
           <li>
