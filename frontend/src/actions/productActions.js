@@ -18,15 +18,16 @@ import {
   PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CATEGORY_FAIL,
 } from "../constants/categoryConstants";
+import Axios from "axios";
 
 const listProduct = (searchParams, numOfItemsInPage) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
-    axios
-      .post("/api/products/home/", { searchParams, numOfItemsInPage })
-      .then((response) =>
-        dispatch({ type: PRODUCT_LIST_SUCCESS, payload: response.data })
-      );
+    const { data } = await Axios.post("/api/products/home/", {
+      searchParams,
+      numOfItemsInPage,
+    });
+    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: PRODUCT_LIST_FAIL, payload: error.response.data.message });
   }
@@ -38,54 +39,51 @@ const saveProduct = (product) => async (dispatch, getState) => {
     userSignin: { userInfo },
   } = getState();
   if (!product._id) {
-    await axios
-      .post("/api/products", product, {
+    try {
+      const { data } = await Axios.post("/api/products", product, {
         headers: {
           Authorization: "Bearer " + userInfo.token,
         },
-      })
-      .then((response) =>
-        dispatch({ type: PRODUCT_SAVE_SUCCESS, payload: response.data })
-      )
-      .catch((error) =>
-        dispatch({
-          type: PRODUCT_SAVE_FAIL,
-          payload: error.response.data.message,
-        })
-      );
+      });
+      dispatch({ type: PRODUCT_SAVE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_SAVE_FAIL,
+        payload: error.response.data.message,
+      });
+    }
   } else {
-    console.log("product._id", product._id);
-    await axios
-      .put("/api/products/" + product._id, product, {
-        headers: {
-          Authorization: "Bearer " + userInfo.token,
-        },
-      })
-      .then((response) =>
-        dispatch({ type: PRODUCT_SAVE_SUCCESS, payload: response.data })
-      )
-      .catch((error) =>
-        dispatch({
-          type: PRODUCT_SAVE_FAIL,
-          payload: error.response.data.message,
-        })
+    try {
+      const { data } = await Axios.put(
+        "/api/products/" + product._id,
+        product,
+        {
+          headers: {
+            Authorization: "Bearer " + userInfo.token,
+          },
+        }
       );
+      dispatch({ type: PRODUCT_SAVE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_SAVE_FAIL,
+        payload: error.response.data.message,
+      });
+    }
   }
 };
 
 const detailsProduct = (productId) => async (dispatch) => {
   dispatch({ type: PRODUCT_DETAILS_REQUEST, payload: productId });
-  axios
-    .get("/api/products/" + productId)
-    .then((response) => {
-      dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: response.data });
-    })
-    .catch((error) =>
-      dispatch({
-        type: PRODUCT_DETAILS_FAIL,
-        payload: error.response.data.message,
-      })
-    );
+  try {
+    const { data } = await Axios.get("/api/products/" + productId);
+    dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DETAILS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
 };
 
 const deleteProduct = (productId) => async (dispatch, getState) => {
@@ -97,36 +95,32 @@ const deleteProduct = (productId) => async (dispatch, getState) => {
     payload: productId,
     success: false,
   });
-  console.log("action");
-  axios
-    .delete("/api/products/" + productId, {
+  try {
+    const { data } = await Axios.delete("/api/products/" + productId, {
       headers: {
         Authorization: "Bearer" + userInfo.token,
       },
-    })
-    .then((response) => {
-      dispatch({
-        type: PRODUCT_DELETE_SUCCESS,
-        payload: response.data,
-        success: true,
-      });
-    })
-    .catch((error) =>
-      dispatch({
-        type: PRODUCT_DELETE_FAIL,
-        payload: error.response.data.message,
-      })
-    );
+    });
+    dispatch({
+      type: PRODUCT_DELETE_SUCCESS,
+      payload: data,
+      success: true,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DELETE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
 };
 
 const productsByCategory = (category) => async (dispatch) => {
   dispatch({ type: PRODUCT_CATEGORY_REQUEST, payload: category });
   try {
-    axios
-      .get("/api/products/categories/" + category.toLowerCase())
-      .then((response) =>
-        dispatch({ type: PRODUCT_CATEGORY_SUCCESS, payload: response.data })
-      );
+    const { data } = await Axios.get(
+      "/api/products/categories/" + category.toLowerCase()
+    );
+    dispatch({ type: PRODUCT_CATEGORY_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
       type: PRODUCT_CATEGORY_FAIL,

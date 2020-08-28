@@ -16,6 +16,7 @@ const MongoStore = require('connect-mongo')(session);
 dotenv.config();
 
 const mongodbUrl = config.MONGODB_URL;
+const sessionSecret = config.SESSION_SECRET;
  mongoose.connect(mongodbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -32,16 +33,15 @@ app.use(
     credentials: true,
   })
 );
-app.use(cookieParser("secretcode"));
+app.use(cookieParser(sessionSecret));
 app.use(
   session({
-    secret: "secretcode",
-    resave: true,
+    secret: sessionSecret,
+    resave: false,
     saveUninitialized: true,
     store:sessionStore,
     cookie:{
-      maxAge: 30 * 24 * 60 * 60 * 1000
-      
+      maxAge:  60 * 60 * 1000
     }
   })
 );

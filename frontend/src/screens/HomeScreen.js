@@ -14,30 +14,31 @@ function HomeScreen(props) {
   const productList = useSelector((state) => state.productList);
   const { products, totalItemCount, loading, error } = productList;
   const searchParams = getParams(window.location.search);
-  const { loadRef } = useContext(LoadContext);
+  const { loadRef, test, userInfo } = useContext(LoadContext);
   const numOfItemsInPage = 32,
     path = "/search",
     maxPage = 5;
   const dispatch = useDispatch();
   // const ps = new PaymentScreen();
   // ps._self.__proto__.submitHandler()
-  console.log("productList", productList);
-  console.log("loading STATE HOME SCREEN", loading);
-  
+  // console.log("productList", productList);
+  // console.log("loading STATE HOME SCREEN", loading);
+
   useEffect(() => {
-    console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
+    // console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
+    test.current = true;
     dispatch(listProduct(searchParams, numOfItemsInPage));
     return () => {
-      console.log("RETURN WORKED CLEAN");
+      // console.log("RETURN WORKED CLEAN");
       dispatch({ type: PRODUCT_LIST_CLEAN });
     };
   }, []);
 
   useEffect(() => {
     if (!preventFirstRender.current) {
-      console.log("HOME SCREEN USEEFFECT LOADING");
+      // console.log("HOME SCREEN USEEFFECT LOADING");
       if (loading === false) {
-        console.log("worked");
+        // console.log("worked");
         loadRef.current.complete();
       }
     }
@@ -80,7 +81,9 @@ function HomeScreen(props) {
                   />{" "}
                 </LinkLoading>
                 <div className="product-name">
-                  <Link to={`/product/${product._id}`}>{product.name}</Link>
+                  <Link to={`/product/${product._id}`}>
+                    {product.name} - {userInfo.name}
+                  </Link>
                 </div>
                 <div className="product-category">{product.category}</div>
                 <div className="product-brand">{product.brand}</div>
@@ -103,12 +106,6 @@ function HomeScreen(props) {
     </Fragment>
   );
 }
-
-const checkStateAndCompleteLoader = (loadRef, setLoadState) => {
-  console.log("loadRef", loadRef);
-  loadRef.current.complete();
-  setLoadState(false);
-};
 
 const getParams = (locationSearch) => {
   const urlSearchParams = new URLSearchParams(locationSearch);

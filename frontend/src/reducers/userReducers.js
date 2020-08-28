@@ -5,6 +5,13 @@ const {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_AUTH_REQUEST,
+  USER_AUTH_SUCCESS,
+  USER_AUTH_FAIL,
+  USER_SIGNOUT_REQUEST,
+  USER_SIGNOUT_SUCCESS,
+  USER_SIGNOUT_FAIL,
+  USER_AUTH_CLEAN,
 } = require("../constants/userConstants");
 
 function userSigninReducer(state = {}, action) {
@@ -12,8 +19,20 @@ function userSigninReducer(state = {}, action) {
     case USER_SIGNIN_REQUEST:
       return { loading: true };
     case USER_SIGNIN_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+      return { loading: false, loginStatus: action.payload };
     case USER_SIGNIN_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}
+function userSignoutReducer(state = {}, action) {
+  switch (action.type) {
+    case USER_SIGNOUT_REQUEST:
+      return { loading: true };
+    case USER_SIGNOUT_SUCCESS:
+      return { loading: false, loginStatus: action.payload };
+    case USER_SIGNOUT_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -32,5 +51,23 @@ function userRegisterReducer(state = {}, action) {
       return state;
   }
 }
-
-export {userSigninReducer, userRegisterReducer}
+function userAuthReducer(state = { userInfo: {} }, action) {
+  switch (action.type) {
+    case USER_AUTH_REQUEST:
+      return { loading: true };
+    case USER_AUTH_SUCCESS:
+      return { loading: false, userInfo: action.payload };
+    case USER_AUTH_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_AUTH_CLEAN:
+      return { userInfo: {} };
+    default:
+      return state;
+  }
+}
+export {
+  userSigninReducer,
+  userRegisterReducer,
+  userAuthReducer,
+  userSignoutReducer,
+};

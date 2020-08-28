@@ -11,13 +11,16 @@ import Cookie from "js-cookie";
 import {
   userSigninReducer,
   userRegisterReducer,
+  userAuthReducer,
+  userSignoutReducer,
 } from "./reducers/userReducers";
 import { orderCreateReducer } from "./reducers/orderReducers";
 const cartItems = Cookie.getJSON("cartItems") || [];
-const userInfo = Cookie.getJSON("userInfo") || null;
 const initialState = {
   cart: { cartItems, shipping: {}, payment: {} },
-  userSignin: { userInfo },
+  userSignin: {},
+  userSignout: {},
+  userAuth: { userInfo: {} },
   productList: { products: [] },
   productDetails: { product: {} },
 };
@@ -26,7 +29,9 @@ const reducer = combineReducers({
   productDetails: productDetailsReducer,
   cart: cartReducer,
   userSignin: userSigninReducer,
+  userSignout: userSignoutReducer,
   userRegister: userRegisterReducer,
+  userAuth: userAuthReducer,
   productSave: productSaveReducer,
   productDelete: productDeleteReducer,
   orderCreate: orderCreateReducer,

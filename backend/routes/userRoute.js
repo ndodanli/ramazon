@@ -12,21 +12,28 @@ router.post("/signin", (req, res, next) => {
     if (!user) res.send("No User Exists");
     else {
       req.logIn(user, (err) => {
-        if (err) throw err;
-        if (user.email !== "dsa") { 
-          console.log('test')
-          req.session.cookie.maxAge = 5000;
-        }
-
-        res.send("Successfully Authenticated");
-        console.log(req.user);
+        if (err) res.status(500).send({ message: "Error while logging in!" });
+        if (req.body.kmSignedIn)
+          req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+        res.send(true);
       });
     }
   })(req, res, next);
 });
 
 router.get("/user", (req, res) => {
-  res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
+  if (req.user) res.send(req.user);
+  else res.send(false);
+});
+router.get("/signout", (req, res) => {
+  req.logOut();
+  req.session.destroy(function (err) {
+    if (err) {
+      return next(err);
+    }
+    // the response should indicate that the user is no longer authenticated.
+    return res.send(req.isAuthenticated());
+  });
 });
 router.post("/register", async (req, res) => {
   User.findOne(

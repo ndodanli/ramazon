@@ -4,5 +4,6 @@ dotenv.config();
 
 export default {
     MONGODB_URL: process.env.MONGODB_URL || 'mongodb://localhost/amazona',
-    JWT_SECRET: process.env.JWT_SECRET || 'somethingsecret'
+    JWT_SECRET: process.env.JWT_SECRET || 'somethingsecret',
+    SESSION_SECRET: process.env.SESSION_SECRET || 'JEROMETHEWILDERNESS node server.js'
 };
