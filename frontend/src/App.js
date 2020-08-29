@@ -99,10 +99,11 @@ function App(props) {
     // window.location.search = searchParams.toString(); //causes reload page
   };
   const signOutHandler = () => {
+    console.log('app signout')
     dispatch(signout());
   };
 
-  return (
+  return ( 
     <LoadContext.Provider
       value={{
         loadRef: loadRef,

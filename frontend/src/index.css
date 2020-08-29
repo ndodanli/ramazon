@@ -117,10 +117,6 @@ button {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
 }
 
 .brand a {

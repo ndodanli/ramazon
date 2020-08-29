@@ -43,7 +43,7 @@ const signin = (username, password, kmSignedIn, rememberMe) => async (
 const signout = () => async (dispatch) => {
   dispatch({ type: USER_SIGNOUT_REQUEST });
   try {
-    const { data } = await axios.get("api/users/signout");
+    const { data } = await axios.get("/api/users/signout");
     dispatch({ type: USER_SIGNOUT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: USER_SIGNOUT_FAIL, payload: error.response.data });

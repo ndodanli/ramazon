@@ -22,7 +22,6 @@ function SigninScreen(props) {
     userInfo,
     error: errorUserAuth,
   } = userDetails;
-  console.log("userInfo SIGNIN", userInfo);
   const { loadRef } = useContext(LoadContext);
   const dispatch = useDispatch();
   const searchParams = new URLSearchParams(window.location.search);
@@ -33,19 +32,20 @@ function SigninScreen(props) {
     if (remMe) {
       setUserName(remMe.username);
     }
-  }, [userInfo]);
+    if (userInfo?._id) props.history.push(redirect);
+  }, []);
+
   useEffect(() => {
     if (loginStatus === true) props.history.push(redirect);
   }, [loginStatus]);
+
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(signin(userName, password, kmSignedIn, rememberMe));
   };
-  // if(userInfo?._id){
-  //   props.history.push(redirect)
-  // }
+
   return userInfo?._id ? (
-    <div>Loading...</div>
+    <div>You are already logged in</div>
   ) : (
     <div className="form">
       <form onSubmit={submitHandler}>

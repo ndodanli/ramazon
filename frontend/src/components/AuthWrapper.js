@@ -1,19 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../actions/userActions";
 import { USER_AUTH_CLEAN } from "../constants/userConstants";
-function AuthWrapper({ children }) {
+import { PRODUCT_LIST_CLEAN } from "../constants/productConstants";
+function AuthWrapper({children}) {
   const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, userInfo, error } = userDetails;
-  console.log('userInfo WRAPPER', userInfo)
+  const { loading } = userDetails;
+  const preventFirstRender = useRef(true);
+  console.log("loading WRAPPER", loading);
   useEffect(() => {
+    preventFirstRender.current = false;
     dispatch(auth());
   }, []);
   //if(statement) As long as the expression inside the parentheses returns something other
-  //than false, null, 0, "" or undefined... the block in the if statement will
+  //than false, null, 0, "" or undefined. the block in the if statement will
   // be executed
-return Object.keys(userInfo).length === 0 ? <div>Loading</div> : children;
+  return loading || preventFirstRender.current ? (
+    <div>Loading</div>
+  ) : (
+    children
+  );
 }
 
 export default AuthWrapper;

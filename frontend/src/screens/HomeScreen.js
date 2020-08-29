@@ -9,6 +9,7 @@ import LinkLoading from "../components/LinkLoading";
 import { showLoading, hideLoading } from "react-redux-loading-bar";
 import Axios from "axios";
 import { USER_AUTH_CLEAN } from "../constants/userConstants";
+import AuthWrapper from "../components/AuthWrapper";
 
 function HomeScreen(props) {
   const preventFirstRender = useRef(true);
@@ -16,7 +17,7 @@ function HomeScreen(props) {
   const { products, totalItemCount, loading, error } = productList;
   const userDetails = useSelector((state) => state.userDetails);
   const { userInfo } = userDetails;
-  console.log('userInfo HOME', userInfo)
+  console.log("userInfo HOME", userInfo);
   const searchParams = getParams(window.location.search);
   const { loadRef } = useContext(LoadContext);
   const numOfItemsInPage = 32,
@@ -31,10 +32,9 @@ function HomeScreen(props) {
     // console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
     dispatch(listProduct(searchParams, numOfItemsInPage));
     return () => {
+      console.log("clean HOME");
       // console.log("RETURN WORKED CLEAN");
       dispatch({ type: PRODUCT_LIST_CLEAN });
-      dispatch({type:USER_AUTH_CLEAN})
-      console.log('clean HOME')
     };
   }, []);
   useEffect(() => {

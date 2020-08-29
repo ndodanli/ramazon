@@ -8,11 +8,11 @@ import store from "./store";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 ReactDOM.render(
   <Router>
-    <Switch>
-      <Provider store={store}>
+    <Provider store={store}>
+      <Switch>
         <App />
-      </Provider>
-    </Switch>
+      </Switch>
+    </Provider>
   </Router>,
   document.getElementById("root")
 );

@@ -21,7 +21,7 @@ router.post("/signin", (req, res, next) => {
   })(req, res, next);
 });
 
-router.get("/user", (req, res) => {
+router.get("/user", (req, res, next) => {
   if (req.user) res.send(req.user);
   else res.send({});
 });
