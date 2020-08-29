@@ -35,11 +35,6 @@ function SigninScreen(props) {
     }
   }, [userInfo]);
 
-  useEffect(() => {
-    if (loadingUserAuth === false) {
-      loadRef.current.complete();
-    }
-  }, [loadingUserAuth]);
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(signin(userName, password, kmSignedIn, rememberMe));
