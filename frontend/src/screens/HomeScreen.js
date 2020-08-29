@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useRef, Fragment, memo } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { listProduct } from "../actions/productActions";
 import Paginate from "../components/Paginate";
@@ -8,13 +8,17 @@ import { PRODUCT_LIST_CLEAN } from "../constants/productConstants";
 import LinkLoading from "../components/LinkLoading";
 import { showLoading, hideLoading } from "react-redux-loading-bar";
 import Axios from "axios";
+import { USER_AUTH_CLEAN } from "../constants/userConstants";
 
 function HomeScreen(props) {
   const preventFirstRender = useRef(true);
   const productList = useSelector((state) => state.productList);
   const { products, totalItemCount, loading, error } = productList;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { userInfo } = userDetails;
+  console.log('userInfo HOME', userInfo)
   const searchParams = getParams(window.location.search);
-  const { loadRef, test, userInfo } = useContext(LoadContext);
+  const { loadRef } = useContext(LoadContext);
   const numOfItemsInPage = 32,
     path = "/search",
     maxPage = 5;
@@ -23,17 +27,16 @@ function HomeScreen(props) {
   // ps._self.__proto__.submitHandler()
   // console.log("productList", productList);
   // console.log("loading STATE HOME SCREEN", loading);
-
   useEffect(() => {
     // console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
-    test.current = true;
     dispatch(listProduct(searchParams, numOfItemsInPage));
     return () => {
       // console.log("RETURN WORKED CLEAN");
       dispatch({ type: PRODUCT_LIST_CLEAN });
+      dispatch({type:USER_AUTH_CLEAN})
+      console.log('clean HOME')
     };
   }, []);
-
   useEffect(() => {
     if (!preventFirstRender.current) {
       // console.log("HOME SCREEN USEEFFECT LOADING");
@@ -81,9 +84,7 @@ function HomeScreen(props) {
                   />{" "}
                 </LinkLoading>
                 <div className="product-name">
-                  <Link to={`/product/${product._id}`}>
-                    {product.name} - {userInfo.name}
-                  </Link>
+                  <Link to={`/product/${product._id}`}>{product.name}</Link>
                 </div>
                 <div className="product-category">{product.category}</div>
                 <div className="product-brand">{product.brand}</div>

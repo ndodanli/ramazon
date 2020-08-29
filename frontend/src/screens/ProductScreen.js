@@ -11,11 +11,11 @@ function ProductScreen(props) {
   const { product, loading, error } = productDetails;
   const { loadRef} = useContext(LoadContext);
   const dispatch = useDispatch();
-  console.log('productDetails', productDetails)
-  console.log("loading PRODUCT SCREEN", loading);
+  // console.log('productDetails', productDetails)
+  // console.log("loading PRODUCT SCREEN", loading);
 
   useEffect(() => {
-    console.log("PRODUCT SCREEN USEEFFECT", loading);
+    // console.log("PRODUCT SCREEN USEEFFECT", loading);
 
     dispatch(detailsProduct(props.match.params.id));
     return () => {
@@ -25,7 +25,7 @@ function ProductScreen(props) {
   }, []);
 
   useEffect(() => {
-    console.log("PRODUCT SCREEN USEEFFECT LOADING");
+    // console.log("PRODUCT SCREEN USEEFFECT LOADING");
     if (loading === false) {
       console.log('product screen COMPLETED')
       loadRef.current.complete();

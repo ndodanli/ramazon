@@ -3,47 +3,48 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { signin, auth } from "../actions/userActions";
 import Axios from "axios";
-import { USER_AUTH_CLEAN } from "../constants/userConstants";
+import { USER_AUTH_CLEAN, USER_SIGNIN_CLEAN } from "../constants/userConstants";
 import { LoadContext } from "../App";
 function SigninScreen(props) {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [kmSignedIn, setKmSignedIn] = useState(true);
   const [rememberMe, setRememberMe] = useState(true);
-  const userSignin = useSelector((state) => state.userSignin);
-  const userAuth = useSelector((state) => state.userAuth);
-  const { loading, error } = userSignin;
-  const { loading: loadingUserAuth, userInfo, error: errorUserAuth } = userAuth;
-  const {loadRef} = useContext(LoadContext)
+  const userLoginStatus = useSelector((state) => state.userLoginStatus);
+  const userDetails = useSelector((state) => state.userDetails);
+  const {
+    loading: loadingSignin,
+    loginStatus,
+    error: errorSignin,
+  } = userLoginStatus;
+  const {
+    loading: loadingUserAuth,
+    userInfo,
+    error: errorUserAuth,
+  } = userDetails;
+  console.log("userInfo SIGNIN", userInfo);
+  const { loadRef } = useContext(LoadContext);
   const dispatch = useDispatch();
   const searchParams = new URLSearchParams(window.location.search);
   const redirect = searchParams.get("redirect") ?? "/";
+
   useEffect(() => {
     const remMe = JSON.parse(localStorage.getItem("remMe"));
     if (remMe) {
       setUserName(remMe.username);
     }
-    dispatch(auth());
-    return () => {
-      dispatch({ type: USER_AUTH_CLEAN });
-    };
-  }, []);
-  useEffect(() => {
-    console.log("userInfo", userInfo);
-    if (userInfo?._id) {
-      props.history.push(redirect);
-    }
   }, [userInfo]);
-
+  useEffect(() => {
+    if (loginStatus === true) props.history.push(redirect);
+  }, [loginStatus]);
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(signin(userName, password, kmSignedIn, rememberMe));
   };
-  console.log("loadingUserAuth", loadingUserAuth);
   // if(userInfo?._id){
   //   props.history.push(redirect)
   // }
-  return loadingUserAuth ? (
+  return userInfo?._id ? (
     <div>Loading...</div>
   ) : (
     <div className="form">
@@ -53,8 +54,8 @@ function SigninScreen(props) {
             <h2>Sign-In</h2>
           </li>
           <li>
-            {loading && <div>Loading...</div>}
-            {error && <div>{error}</div>}
+            {loadingSignin && <div>Loading...</div>}
+            {errorSignin && <div>{errorSignin}</div>}
           </li>
           <li>
             <label htmlFor="username">Username</label>

@@ -31,6 +31,7 @@ function productListReducer(state = { products: [] }, action) {
         totalItemCount: action.payload.totalItemCount,
       };
     case PRODUCT_LIST_FAIL:
+      console.log('fail')
       return { loading: false, error: action.payload };
       case PRODUCT_LIST_CLEAN:
         return {loading: true, products: [] }

@@ -1,12 +1,6 @@
 import React, { useState, useRef, memo, useEffect } from "react";
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  withRouter,
-  NavLink,
-} from "react-router-dom";
+import { Route, Link, withRouter } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
@@ -22,27 +16,55 @@ import CartSection from "./components/CartSection";
 import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import LinkLoading from "./components/LinkLoading";
-import LoginScreen from "./screens/LoginScreen";
-import { auth, signout } from "./actions/userActions";
-import { USER_AUTH_CLEAN } from "./constants/userConstants";
-import AuthControl from "./hooks/useAuthControl";
+import { signout } from "./actions/userActions";
+import AuthWrapper from "./components/AuthWrapper";
+
 export const LoadContext = React.createContext();
 
 function App(props) {
   const loadRef = useRef(null);
-  const [userInfo, setUserInfo] = useState({})
-  // const userAuth = useSelector((state) => state.userAuth);
-  // const { userInfo } = userAuth;
+
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, userInfo, error } = userDetails;
+
+  const userLoginStatus = useSelector((state) => state.userLoginStatus);
+  const {
+    loading: loadingSignOut,
+    loginStatus,
+    error: errorSignOut,
+  } = userLoginStatus;
   const dispatch = useDispatch();
   useEffect(() => {
-    const cartSection = document.querySelector(".cart-section");
     const searchBar = document.querySelector(".search-bar");
-    setEventListeners(cartSection);
+    const brand = document.querySelector(".brand").lastChild;
+    const widthX = window.matchMedia("(max-width: 600px)");
+
+    const searchBarExpand = () => {
+      if (widthX.matches) {
+        brand.classList.add("search");
+      }
+    };
+    const searchBarCollapse = () => {
+      if (widthX.matches) {
+        setTimeout(() => {
+          brand.classList.remove("search");
+        }, 300);
+      }
+    };
+    setEventListeners({
+      els: { searchBar },
+      funcs: { searchBarExpand, searchBarCollapse },
+    });
     return () => {
-      cartSection.removeEventListener();
-      searchBar.removeEventListener();
+      searchBar.removeEventListener("focusin", searchBarExpand);
+      searchBar.removeEventListener("focusout", searchBarCollapse);
     };
   }, []);
+
+  useEffect(() => {
+
+    if (loginStatus === false) props.history.push("/signin");
+  }, [loginStatus]);
   const openMenu = () => {
     document.querySelector(".sidebar").classList.add("open");
   };
@@ -59,6 +81,17 @@ function App(props) {
       }, 20);
     } else {
       cartSection.classList.add("visuallyhidden");
+      cartSection.addEventListener(
+        "transitionend",
+        () => {
+          cartSection.classList.add("hidden");
+        },
+        {
+          capture: false,
+          once: true,
+          passive: false,
+        }
+      );
     }
   };
   const handleCategory = (newRelativePathQuery) => {
@@ -68,13 +101,7 @@ function App(props) {
   const signOutHandler = () => {
     dispatch(signout());
   };
-  // const test = useRef(true);
-  // console.log('APPPP')
-  // if(test.current){
-  //   console.log('test.current', test.current)
-  //   AuthControl().then(res => setUserInfo(res))
-  // }
-  // test.current = false
+
   return (
     <LoadContext.Provider
       value={{
@@ -94,7 +121,8 @@ function App(props) {
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
-            <LinkLoading to="/">ramazon</LinkLoading>
+            <LinkLoading to="/">{userInfo.name}</LinkLoading>
+            <div></div>
           </div>
           <div className="search-bar-section">
             <SearchBar historyPush={props.history.push} />
@@ -103,16 +131,11 @@ function App(props) {
             <div className="cart-link" onClick={handleCartSection}>
               Cart{" "}
             </div>
-            {userInfo ? (
-              <div>
-                <LinkLoading to="/profile">{userInfo.name}</LinkLoading>
-                <LinkLoading to="/" onClick={() => signOutHandler()}>
-                  Sign out
-                </LinkLoading>
-              </div>
-            ) : (
-              <LinkLoading to="/signin">Signin</LinkLoading>
-            )}
+            <div>
+              <LinkLoading to="/profile"></LinkLoading>
+              <button onClick={() => signOutHandler()}>Sign out</button>
+            </div>
+            <LinkLoading to="/signin">Signin</LinkLoading>
           </div>
         </header>
         <aside className="sidebar">
@@ -145,20 +168,82 @@ function App(props) {
         <main className="main">
           <div className="content"></div>
           <CartSection />
-          <Route path="/products" component={ProductsScreen} />
-          <Route path="/shipping" component={ShippingScreen} />
-          <Route path="/payment" component={PaymentScreen} />
-          <Route path="/placeorder" component={PlaceOrderScreen} />
-          <Route path="/register" component={RegisterScreen} />
-          <Route path="/signin" component={SigninScreen} />
-          <Route path="/product/:id" component={ProductScreen} />
-          <Route path="/cart/:id?" component={CartScreen} />
-          <Route path="/login" component={LoginScreen} />
-          {/* <Route path="/oauth_callback" component={LoginCallback} /> */}
+
+          <Route
+            path="/products"
+            render={(props) => (
+              <AuthWrapper>
+                {" "}
+                <ProductsScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/shipping"
+            render={(props) => (
+              <AuthWrapper>
+                <ShippingScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/payment"
+            render={(props) => (
+              <AuthWrapper>
+                <PaymentScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/placeorder"
+            render={(props) => (
+              <AuthWrapper>
+                <PlaceOrderScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/register"
+            render={(props) => (
+              <AuthWrapper>
+                <RegisterScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/signin"
+            render={(props) => (
+              <AuthWrapper>
+                {" "}
+                <SigninScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/product/:id"
+            render={(props) => (
+              <AuthWrapper>
+                {" "}
+                <ProductScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
+          <Route
+            path="/cart/:id?"
+            render={(props) => (
+              <AuthWrapper>
+                <CartScreen {...props} />
+              </AuthWrapper>
+            )}
+          />
           <Route
             path={["/search", "/"]}
             exact
-            component={withRouter(HomeScreen)}
+            render={(props) => (
+              <AuthWrapper>
+                <HomeScreen {...props} />
+              </AuthWrapper>
+            )}
           />
         </main>
         <footer className="footer">All right reserved.</footer>
@@ -167,32 +252,14 @@ function App(props) {
   );
 }
 
-const setEventListeners = (cartSection) => {
-  cartSection.addEventListener(
-    "transitionend",
-    () => {
-      cartSection.classList.add("hidden");
-    },
-    {
-      capture: false,
-      once: true,
-      passive: false,
-    }
+const setEventListeners = (elsAndFuncs) => {
+  elsAndFuncs.els.searchBar.addEventListener(
+    "focusin",
+    elsAndFuncs.funcs.searchBarExpand
   );
-  const searchBar = document.querySelector(".search-bar");
-  const brand = document.querySelector(".brand").lastChild;
-  const widthX = window.matchMedia("(max-width: 600px)");
-  searchBar.addEventListener("focusin", () => {
-    if (widthX.matches) {
-      brand.classList.add("search");
-    }
-  });
-  searchBar.addEventListener("focusout", () => {
-    if (widthX.matches) {
-      setTimeout(() => {
-        brand.classList.remove("search");
-      }, 300);
-    }
-  });
+  elsAndFuncs.els.searchBar.addEventListener(
+    "focusout",
+    elsAndFuncs.funcs.searchBarCollapse
+  );
 };
 export default withRouter(App);

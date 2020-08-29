@@ -15,7 +15,7 @@ router.post("/signin", (req, res, next) => {
         if (err) res.status(500).send({ message: "Error while logging in!" });
         if (req.body.kmSignedIn)
           req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-        res.send(true);
+        res.send(req.isAuthenticated());
       });
     }
   })(req, res, next);
@@ -23,7 +23,7 @@ router.post("/signin", (req, res, next) => {
 
 router.get("/user", (req, res) => {
   if (req.user) res.send(req.user);
-  else res.send(false);
+  else res.send({});
 });
 router.get("/signout", (req, res) => {
   req.logOut();
@@ -31,7 +31,7 @@ router.get("/signout", (req, res) => {
     if (err) {
       return next(err);
     }
-    // the response should indicate that the user is no longer authenticated.
+    // the response should indicate that the user is no longer authenticated
     return res.send(req.isAuthenticated());
   });
 });
