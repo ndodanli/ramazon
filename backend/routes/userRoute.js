@@ -6,14 +6,14 @@ const router = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
-router.post("/signin", (req, res, next) => {
+router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) throw err;
     if (!user) res.send("No User Exists");
     else {
       req.logIn(user, (err) => {
         if (err) res.status(500).send({ message: "Error while logging in!" });
-        if (req.body.kmSignedIn)
+        if (req.body.kmLoggedIn)
           req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
         res.send(req.isAuthenticated());
       });
@@ -25,7 +25,7 @@ router.get("/user", (req, res, next) => {
   if (req.user) res.send(req.user);
   else res.send({});
 });
-router.get("/signout", (req, res) => {
+router.get("/logout", (req, res) => {
   req.logOut();
   req.session.destroy(function (err) {
     if (err) {

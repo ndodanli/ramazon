@@ -2,7 +2,7 @@ import React, { useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeFromCart } from "../actions/cartActions";
-import LinkLoading from "./LinkLoading";
+import CustomLink from "./CustomLink";
 function CartSection() {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
@@ -33,7 +33,7 @@ function CartSection() {
             </div>
           );
         })}
-        <LinkLoading onClick={closeCartSection} className="go-to-cart" to="/cart">Go to Cart</LinkLoading>
+        <CustomLink loading onClick={closeCartSection} className="go-to-cart" to="/cart">Go to Cart</CustomLink>
       </div>
     </div>
   );

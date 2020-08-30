@@ -4,7 +4,7 @@ import { Route, Link, withRouter } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
-import SigninScreen from "./screens/SigningScreen";
+import LoginScreen from "./screens/LoginScreen";
 import { useSelector, useDispatch } from "react-redux";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProductsScreen from "./screens/ProductsScreen";
@@ -15,23 +15,23 @@ import SearchBar from "./components/SearchBar";
 import CartSection from "./components/CartSection";
 import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
-import LinkLoading from "./components/LinkLoading";
-import { signout } from "./actions/userActions";
+import CustomLink from "./components/CustomLink";
+import { logout } from "./actions/userActions";
 import AuthWrapper from "./components/AuthWrapper";
-
+import { push } from "connected-react-router";
 export const LoadContext = React.createContext();
 
 function App(props) {
   const loadRef = useRef(null);
-
+  const [updateSamePage, setUpdateSamePage] = useState(false);
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, userInfo, error } = userDetails;
-
+  const widthX = window.matchMedia("(max-width: 600px)");
   const userLoginStatus = useSelector((state) => state.userLoginStatus);
   const {
-    loading: loadingSignOut,
+    loading: loadinglogOut,
     loginStatus,
-    error: errorSignOut,
+    error: errorlogOut,
   } = userLoginStatus;
   const dispatch = useDispatch();
   useEffect(() => {
@@ -62,8 +62,7 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-
-    if (loginStatus === false) props.history.push("/signin");
+    if (loginStatus === false) props.history.push("/login");
   }, [loginStatus]);
   const openMenu = () => {
     document.querySelector(".sidebar").classList.add("open");
@@ -98,15 +97,17 @@ function App(props) {
     window.history.pushState(null, "", newRelativePathQuery);
     // window.location.search = searchParams.toString(); //causes reload page
   };
-  const signOutHandler = () => {
-    console.log('app signout')
-    dispatch(signout());
+  const logOutHandler = () => {
+    console.log("app logout");
+    dispatch(logout());
   };
 
-  return ( 
+  return (
     <LoadContext.Provider
       value={{
         loadRef: loadRef,
+        updateSamePage: updateSamePage,
+        setUpdateSamePage: setUpdateSamePage,
       }}
     >
       <LoadingBar
@@ -122,29 +123,39 @@ function App(props) {
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
-            <LinkLoading to="/">{userInfo.name}</LinkLoading>
-            <div></div>
+            <CustomLink updateSamePage to="/">
+              ramazon
+            </CustomLink>
           </div>
           <div className="search-bar-section">
-            <SearchBar historyPush={props.history.push} />
+            <Route render={(props) => <SearchBar {...props} />} />
           </div>
           <div className="header-links">
             <div className="cart-link" onClick={handleCartSection}>
               Cart{" "}
             </div>
-            <div>
-              <LinkLoading to="/profile"></LinkLoading>
-              <button onClick={() => signOutHandler()}>Sign out</button>
-            </div>
-            <LinkLoading to="/signin">Signin</LinkLoading>
+            {userInfo?._id ? (
+              <div className="user-info-section">
+                <CustomLink className="profile" loading to="/profile">
+                  {userInfo.name}
+                </CustomLink>
+                <div className="logout" onClick={() => logOutHandler()}>
+                  Logout
+                </div>
+              </div>
+            ) : (
+              <CustomLink loading to="/login">
+                Login
+              </CustomLink>
+            )}
           </div>
         </header>
         <aside className="sidebar">
-          <h3>Shopping Categories</h3>
+          <h3 className="category-title">Shopping Categories</h3>
           <button className="sidebar-close-button" onClick={closeMenu}>
             x
           </button>
-          <ul>
+          <ul className="category-container">
             {CATEGORIES.map((category) => {
               const searchParams = new URLSearchParams();
               // console.log("searchParamsAPP", searchParams.toString());
@@ -154,13 +165,14 @@ function App(props) {
                 "/search" + "?" + searchParams.toString();
               // console.log("newRelativePathQueryAPP", newRelativePathQuery);
               return (
-                <li key={category}>
-                  <Link
+                <li key={category} className="category-li">
+                  <CustomLink
+                    className="category-link"
                     to={newRelativePathQuery}
                     onClick={() => handleCategory(newRelativePathQuery)}
                   >
-                    {category}
-                  </Link>
+                    <span className="category"> {category}</span>
+                  </CustomLink>
                 </li>
               );
             })}
@@ -212,11 +224,10 @@ function App(props) {
             )}
           />
           <Route
-            path="/signin"
+            path="/login"
             render={(props) => (
               <AuthWrapper>
-                {" "}
-                <SigninScreen {...props} />
+                <LoginScreen {...props} />
               </AuthWrapper>
             )}
           />
@@ -224,7 +235,6 @@ function App(props) {
             path="/product/:id"
             render={(props) => (
               <AuthWrapper>
-                {" "}
                 <ProductScreen {...props} />
               </AuthWrapper>
             )}

@@ -1,24 +1,24 @@
 import axios from "axios";
 import Cookie from "js-cookie";
 import {
-  USER_SIGNIN_REQUEST,
-  USER_SIGNIN_SUCCESS,
-  USER_SIGNIN_FAIL,
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESS,
+  USER_LOGIN_FAIL,
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_REQUEST,
   USER_AUTH_REQUEST,
   USER_AUTH_SUCCESS,
   USER_AUTH_FAIL,
-  USER_SIGNOUT_FAIL,
-  USER_SIGNOUT_SUCCESS,
-  USER_SIGNOUT_REQUEST,
+  USER_LOGOUT_FAIL,
+  USER_LOGOUT_SUCCESS,
+  USER_LOGOUT_REQUEST,
 } from "../constants/userConstants";
 import Axios from "axios";
-const signin = (username, password, kmSignedIn, rememberMe) => async (
+const login = (username, password, kmLoggedIn, rememberMe) => async (
   dispatch
 ) => {
-  dispatch({ type: USER_SIGNIN_REQUEST });
+  dispatch({ type: USER_LOGIN_REQUEST });
   if (rememberMe) {
     localStorage.setItem("remMe", JSON.stringify({ username: username }));
   } else {
@@ -26,27 +26,27 @@ const signin = (username, password, kmSignedIn, rememberMe) => async (
   }
   try {
     const { data } = await axios.post(
-      "api/users/signin",
+      "api/users/login",
       {
         username: username,
         password: password,
-        kmSignedIn: kmSignedIn,
+        kmLoggedIn: kmLoggedIn,
       },
       { withCredentials: true }
     );
-    dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
+    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: USER_SIGNIN_FAIL, payload: error.response.data });
+    dispatch({ type: USER_LOGIN_FAIL, payload: error.response.data });
   }
 };
 
-const signout = () => async (dispatch) => {
-  dispatch({ type: USER_SIGNOUT_REQUEST });
+const logout = () => async (dispatch) => {
+  dispatch({ type: USER_LOGOUT_REQUEST });
   try {
-    const { data } = await axios.get("/api/users/signout");
-    dispatch({ type: USER_SIGNOUT_SUCCESS, payload: data });
+    const { data } = await axios.get("/api/users/logout");
+    dispatch({ type: USER_LOGOUT_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: USER_SIGNOUT_FAIL, payload: error.response.data });
+    dispatch({ type: USER_LOGOUT_FAIL, payload: error.response.data });
   }
 };
 
@@ -83,4 +83,4 @@ const auth = () => async (dispatch) => {
     dispatch({ type: USER_AUTH_FAIL, payload: error.response.data });
   }
 };
-export { signin, register, auth, signout };
+export { login, register, auth, logout };

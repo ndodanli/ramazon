@@ -1,19 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import "./index.css";
+import { Switch } from "react-router-dom";
+import { ConnectedRouter } from "connected-react-router";
+import configureStore, { history } from "./configureStore";
+import Cookie from "js-cookie";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import store from "./store";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+const cartItems = Cookie.getJSON("cartItems") || [];
+
+const store = configureStore({
+  cart: { cartItems, shipping: {}, payment: {} },
+  userDetails: { userInfo: {} },
+  productList: { products: [], totalItemCount: 0 },
+  productDetails: { product: {} },
+});
 ReactDOM.render(
-  <Router>
-    <Provider store={store}>
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
       <Switch>
         <App />
       </Switch>
-    </Provider>
-  </Router>,
+    </ConnectedRouter>
+  </Provider>,
   document.getElementById("root")
 );
 

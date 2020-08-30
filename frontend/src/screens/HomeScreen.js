@@ -5,11 +5,7 @@ import { listProduct } from "../actions/productActions";
 import Paginate from "../components/Paginate";
 import { LoadContext } from "../App";
 import { PRODUCT_LIST_CLEAN } from "../constants/productConstants";
-import LinkLoading from "../components/LinkLoading";
-import { showLoading, hideLoading } from "react-redux-loading-bar";
-import Axios from "axios";
-import { USER_AUTH_CLEAN } from "../constants/userConstants";
-import AuthWrapper from "../components/AuthWrapper";
+import CustomLink from "../components/CustomLink";
 
 function HomeScreen(props) {
   const preventFirstRender = useRef(true);
@@ -31,15 +27,10 @@ function HomeScreen(props) {
   useEffect(() => {
     // console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
     dispatch(listProduct(searchParams, numOfItemsInPage));
-    return () => {
-      console.log("clean HOME");
-      // console.log("RETURN WORKED CLEAN");
-      dispatch({ type: PRODUCT_LIST_CLEAN });
-    };
   }, []);
   useEffect(() => {
     if (!preventFirstRender.current) {
-      // console.log("HOME SCREEN USEEFFECT LOADING");
+      console.log("HOME SCREEN USEEFFECT LOADING");
       if (loading === false) {
         // console.log("worked");
         loadRef.current.complete();
@@ -76,13 +67,13 @@ function HomeScreen(props) {
           return (
             <li key={product._id}>
               <div className={`product`}>
-                <LinkLoading to={`/product/${product._id}`}>
+                <CustomLink loading to={`/product/${product._id}`}>
                   <img
                     className="product-image "
                     src={product.image}
                     alt="product"
                   />{" "}
-                </LinkLoading>
+                </CustomLink>
                 <div className="product-name">
                   <Link to={`/product/${product._id}`}>{product.name}</Link>
                 </div>

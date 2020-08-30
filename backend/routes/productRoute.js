@@ -5,22 +5,18 @@ const router = express.Router();
 const cors = require("cors");
 router.use(cors());
 
-router.get("/categories/:category", async (req, res) => {
-  const category = req.params.category;
-  const products = await Product.find({
-    category: category,
-  });
-  res.send(products);
-});
 
 router.post("/home", async (req, res) => {
   const searchValue = req.body.searchParams.q,
     page =
-      req.body.searchParams.page - 1 === 0 ? 1 : req.body.searchParams.page - 1,
+      req.body.searchParams.page - 1 < 0 ? 0 : req.body.searchParams.page - 1,
     category = req.body.searchParams.category,
     numOfItemsInPage = req.body.numOfItemsInPage;
   let totalItemCount = 0;
-  await Product.find({}).countDocuments(function (err, count) {
+  await Product.find({
+    name: { $regex: searchValue, $options: "i" },
+    category: { $regex: category, $options: "i" },
+  }).countDocuments(function (err, count) {
     totalItemCount = count;
   });
   await Product.find({
@@ -48,7 +44,7 @@ router.get("/:id", async (req, res) => {
     res.status(404).send({ message: "Product Not Found" });
   }
 });
-router.post("/", isAuth, async (req, res) => {
+router.post("/", async (req, res) => {
   const product = new Product({
     name: req.body.name,
     price: req.body.price,

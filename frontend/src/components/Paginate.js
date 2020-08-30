@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import LinkLoading from "./LinkLoading";
+import CustomLink from "./CustomLink";
 function Paginate(props) {
   let pageCount = Math.ceil(props.totalItemCount / props.numOfItemsInPage);
   const pageMax = pageCount;
@@ -33,7 +33,7 @@ function Paginate(props) {
   return (
     <div className="paginate">
       <div className="paginate-flex">
-        <LinkLoading
+        <CustomLink loading updateSamePage
           className={`paginate-item paginate-previous ${
             props.page - 1 <= 0 ? "disabled" : ""
           }`}
@@ -44,7 +44,7 @@ function Paginate(props) {
           }
         >
           Previous
-        </LinkLoading>
+        </CustomLink>
         {setPages(
           firstDots,
           lastDots,
@@ -54,7 +54,7 @@ function Paginate(props) {
           pageCount,
           props.path
         )}
-        <LinkLoading
+        <CustomLink loading updateSamePage
           className={`paginate-item paginate-next ${
             props.page + 1 >= pageMax ? "disabled" : ""
           }`}
@@ -65,7 +65,7 @@ function Paginate(props) {
           }
         >
           Next
-        </LinkLoading>
+        </CustomLink>
       </div>
     </div>
   );
@@ -85,14 +85,14 @@ const setPages = (
       {!firstDots && lastDots ? (
         <Fragment>
           {[...Array(pageCount || currentPage).keys()].map((x) => (
-            <LinkLoading key={x}
+            <CustomLink loading updateSamePage key={x}
               className={`paginate-item ${
                 currentPage === x + 1 ? "selected" : ""
               }`}
               to={setSearchParams(x + 1, path)}
             >
               {x + 1}
-            </LinkLoading>
+            </CustomLink>
           ))}
           {lastDotPart(currentPage, path, pageMax)}
         </Fragment>
@@ -102,14 +102,14 @@ const setPages = (
           {[...Array(pageMax || currentPage).keys()]
             .slice(pageCount, pageMax)
             .map((x) => (
-              <LinkLoading key={x}
+              <CustomLink loading updateSamePage key={x}
                 className={`paginate-item ${
                   currentPage === x + 1 ? "selected" : ""
                 }`}
                 to={setSearchParams(x + 1, path)}
               >
                 {x + 1}
-              </LinkLoading>
+              </CustomLink>
             ))}
         </Fragment>
       ) : firstDots && lastDots ? (
@@ -119,14 +119,14 @@ const setPages = (
           {[...Array(pageCount || currentPage).keys()]
             .slice(currentPage - 3, currentPage + 2)
             .map((x) => (
-              <LinkLoading key={x}
+              <CustomLink loading updateSamePage key={x}
                 className={`paginate-item ${
                   currentPage === x + 1 ? "selected" : ""
                 }`}
                 to={setSearchParams(x + 1, path)}
               >
                 {x + 1}
-              </LinkLoading>
+              </CustomLink>
             ))}
 
           {lastDotPart(currentPage, path, pageMax)}
@@ -134,14 +134,14 @@ const setPages = (
       ) : (
         <Fragment>
           {[...Array(pageCount || currentPage).keys()].map((x) => (
-            <LinkLoading key={x}
+            <CustomLink loading updateSamePage key={x}
               className={`paginate-item ${
                 currentPage === x + 1 ? "selected" : ""
               }`}
               to={setSearchParams(x + 1, path)}
             >
               {x + 1}
-            </LinkLoading>
+            </CustomLink>
           ))}
         </Fragment>
       )}
@@ -158,18 +158,18 @@ const setSearchParams = (params, path) => {
 const firstDotPart = (currentPage, path) => {
   return (
     <Fragment>
-      <LinkLoading
+      <CustomLink loading updateSamePage
         className={`paginate-item ${currentPage === 1 ? "selected" : ""}`}
         to={setSearchParams(1, path)}
       >
         {1}
-      </LinkLoading>
-      <LinkLoading
+      </CustomLink>
+      <CustomLink loading updateSamePage
         className={`paginate-item ${currentPage === 2 ? "selected" : ""}`}
         to={setSearchParams(2, path)}
       >
         {2}
-      </LinkLoading>
+      </CustomLink>
       <a className="paginate-dots">...</a>
     </Fragment>
   );
@@ -179,20 +179,20 @@ const lastDotPart = (currentPage, path, pageMax) => {
   return (
     <Fragment>
       <a className="paginate-dots">...</a>
-      <LinkLoading
+      <CustomLink loading updateSamePage
         className={`paginate-item ${
           currentPage === pageMax - 1 ? "selected" : ""
         }`}
         to={setSearchParams(pageMax - 1, path)}
       >
         {pageMax - 1}
-      </LinkLoading>
-      <LinkLoading
+      </CustomLink>
+      <CustomLink loading updateSamePage
         className={`paginate-item ${currentPage === pageMax ? "selected" : ""}`}
         to={setSearchParams(pageMax, path)}
       >
         {pageMax}
-      </LinkLoading>
+      </CustomLink>
     </Fragment>
   );
 };

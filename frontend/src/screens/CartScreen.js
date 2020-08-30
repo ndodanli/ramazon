@@ -3,24 +3,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { Link } from "react-router-dom";
 import { LoadContext } from "../App";
+import { isEmpty } from "../components/Utility";
+import {push} from "connected-react-router"
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  const { loadRef } = useContext(LoadContext);
 
+  const userDetails = useSelector((state) => state.userDetails);
+  const { userInfo } = userDetails;
+  const { loadRef } = useContext(LoadContext);
   const dispatch = useDispatch();
   const removeFromCartHandler = (productId) => {
     dispatch(removeFromCart(productId));
   };
-
+  console.log('props.location', props.location)
   useEffect(() => {
+   console.log('USEEFFECT')
     if (cartItems) {
       loadRef.current.complete();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const checkOutHandler = () => {
-    props.history.push("/signin?redirect=shipping");
+    if (isEmpty(userInfo)) dispatch(push("/login?redirect=shipping"));
+    else dispatch(push("/shipping"))
   };
   return (
     <div className="cart">
