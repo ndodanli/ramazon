@@ -1,6 +1,12 @@
 import React, { useEffect, useReducer, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { saveProduct, listProduct, deleteProduct } from "../actions/productActions";
+import {
+  saveProduct,
+  listProduct,
+  deleteProduct,
+} from "../actions/productActions";
+import withAuthWrapper from "../components/withAuthentication";
+import withAuthentication from "../components/withAuthentication";
 const initialState = {};
 const productReducer = (state, action) => {
   switch (action.type) {
@@ -32,16 +38,24 @@ function ProductsScreen(props) {
   const [product, productDispatch] = useReducer(productReducer, initialState);
   const productList = useSelector((state) => state.productList);
   const { loading, products, error } = productList;
-  
+
   const userSignin = useSelector((state) => state.userSignin);
-  const {userInfo} = userSignin;
+  const { userInfo } = userSignin;
 
   const productSave = useSelector((state) => state.productSave);
-  const {loading: loadingSave, success: successSave, error: errorSave,} = productSave;
+  const {
+    loading: loadingSave,
+    success: successSave,
+    error: errorSave,
+  } = productSave;
 
   const productDelete = useSelector((state) => state.productDelete);
-  const {loading: loadingDelete, success: successDelete, error: errorDelete,} = productDelete;
-  
+  const {
+    loading: loadingDelete,
+    success: successDelete,
+    error: errorDelete,
+  } = productDelete;
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (successSave) {
@@ -73,16 +87,19 @@ function ProductsScreen(props) {
   };
 
   const deleteHandler = (product) => {
-    dispatch(deleteProduct(product._id))
-  }
+    dispatch(deleteProduct(product._id));
+  };
 
   return (
     <div>
       <div className="content content-margined">
         <div className="product-header">
           <h3>Products</h3>
-          {userInfo.isAdmin && <button className="button" onClick={() => openModal({})}>Create Product</button>}
-          
+          {userInfo.isAdmin && (
+            <button className="button" onClick={() => openModal({})}>
+              Create Product
+            </button>
+          )}
         </div>
       </div>
       {modalVisible && (
@@ -241,9 +258,15 @@ function ProductsScreen(props) {
                 <td>{product.category}</td>
                 <td>{product.brand}</td>
                 <td>
-                  <button className="button" onClick={() => openModal(product)}>Edit</button>
-                  {' '}
-                  <button className="button" onClick={() => deleteHandler(product)}>Delete</button>
+                  <button className="button" onClick={() => openModal(product)}>
+                    Edit
+                  </button>{" "}
+                  <button
+                    className="button"
+                    onClick={() => deleteHandler(product)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -254,4 +277,4 @@ function ProductsScreen(props) {
   );
 }
 
-export default ProductsScreen;
+export default withAuthentication(ProductsScreen);

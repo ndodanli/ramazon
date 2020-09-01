@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { LoadContext } from "../App";
 
 function CustomLink(props) {
-  const { loadRef, setUpdateSamePage } = useContext(LoadContext);
+  const { loadRef, setUpdateSamePage, setPreventFirstRender } = useContext(
+    LoadContext
+  );
   return (
     <Link
       to={props.to}
@@ -17,7 +19,8 @@ function CustomLink(props) {
         }
         const onClk = props.onClick;
         if (onClk) onClk();
-          setUpdateSamePage((prevState) => !prevState);
+        setPreventFirstRender(true);
+        setUpdateSamePage((prevState) => !prevState);
       }}
     >
       {props.children}

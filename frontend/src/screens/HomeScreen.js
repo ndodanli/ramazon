@@ -6,6 +6,9 @@ import Paginate from "../components/Paginate";
 import { LoadContext } from "../App";
 import { PRODUCT_LIST_CLEAN } from "../constants/productConstants";
 import CustomLink from "../components/CustomLink";
+import AuthWrapper from "../components/withAuthentication";
+import withAuthWrapper from "../components/withAuthentication";
+import withAuthentication from "../components/withAuthentication";
 
 function HomeScreen(props) {
   const preventFirstRender = useRef(true);
@@ -16,7 +19,7 @@ function HomeScreen(props) {
   console.log("userInfo HOME", userInfo);
   const searchParams = getParams(window.location.search);
   const { loadRef } = useContext(LoadContext);
-  const numOfItemsInPage = 32,
+  const numOfItemsInPage = 1000,
     path = "/search",
     maxPage = 5;
   const dispatch = useDispatch();
@@ -44,7 +47,9 @@ function HomeScreen(props) {
       <ul className="products">
         {[...Array(numOfItemsInPage).keys()].map((key) => {
           return (
+            
             <li key={key}>
+              {console.log('PRODUCTS LOADING TEST')}
               <div className="product">
                 <div className="product-image loading"> </div>
                 <div className="product-name loading"> </div>
@@ -66,6 +71,7 @@ function HomeScreen(props) {
         {products.map((product) => {
           return (
             <li key={product._id}>
+              {console.log('PRODUCTS TEST')}
               <div className={`product`}>
                 <CustomLink loading to={`/product/${product._id}`}>
                   <img
@@ -110,4 +116,4 @@ const getParams = (locationSearch) => {
     category: urlSearchParams.get("category") ?? "",
   };
 };
-export default HomeScreen;
+export default withAuthentication(HomeScreen);

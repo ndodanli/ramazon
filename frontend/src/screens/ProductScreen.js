@@ -4,12 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { detailsProduct } from "../actions/productActions";
 import { addToCart } from "../actions/cartActions";
 import { LoadContext } from "../App";
-import {PRODUCT_DETAILS_CLEAN} from "../constants/productConstants"
+import { PRODUCT_DETAILS_CLEAN } from "../constants/productConstants";
+import CustomLink from "../components/CustomLink";
+import withAuthentication from "../components/withAuthentication";
 function ProductScreen(props) {
   const [qty, setQty] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
   const { product, loading, error } = productDetails;
-  const { loadRef} = useContext(LoadContext);
+  const { loadRef } = useContext(LoadContext);
   const dispatch = useDispatch();
   // console.log('productDetails', productDetails)
   // console.log("loading PRODUCT SCREEN", loading);
@@ -19,22 +21,22 @@ function ProductScreen(props) {
 
     dispatch(detailsProduct(props.match.params.id));
     return () => {
-      dispatch({type: PRODUCT_DETAILS_CLEAN})
-    }
+      dispatch({ type: PRODUCT_DETAILS_CLEAN });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     // console.log("PRODUCT SCREEN USEEFFECT LOADING");
     if (loading === false) {
-      console.log('product screen COMPLETED')
+      console.log("product screen COMPLETED");
       loadRef.current.complete();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
   const handleAddToCart = () => {
     dispatch(addToCart(product._id, qty));
-    document.querySelector(".cart-link").click();
+    document.querySelector(".cart-button").click();
 
     // props.history.push({
     //   pathname:
@@ -114,4 +116,5 @@ function ProductScreen(props) {
   );
 }
 
-export default ProductScreen;
+export default withAuthentication(ProductScreen);
+

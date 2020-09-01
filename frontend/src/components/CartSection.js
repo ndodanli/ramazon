@@ -12,7 +12,7 @@ function CartSection() {
   };
 
   const closeCartSection = () => {
-    document.querySelector('.cart-link').click();
+    document.querySelector('.cart-button').click();
   }
   return (
     <div className="cart-section hidden visuallyhidden">

@@ -1,7 +1,6 @@
-import React, { useState, useRef, memo, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense, lazy } from "react";
 import "./App.css";
-import { Route, Link, withRouter } from "react-router-dom";
-import HomeScreen from "./screens/HomeScreen";
+import { Route, withRouter } from "react-router-dom";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -17,37 +16,39 @@ import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import CustomLink from "./components/CustomLink";
 import { logout } from "./actions/userActions";
-import AuthWrapper from "./components/AuthWrapper";
-import { push } from "connected-react-router";
 export const LoadContext = React.createContext();
-
+const HomeScreen = lazy(() => import("./screens/HomeScreen"));
 function App(props) {
   const loadRef = useRef(null);
   const [updateSamePage, setUpdateSamePage] = useState(false);
+  const [preventFirstRender, setPreventFirstRender] = useState(true);
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, userInfo, error } = userDetails;
-  const widthX = window.matchMedia("(max-width: 600px)");
+  const { userInfo } = userDetails;
   const userLoginStatus = useSelector((state) => state.userLoginStatus);
   const {
-    loading: loadinglogOut,
     loginStatus,
-    error: errorlogOut,
   } = userLoginStatus;
   const dispatch = useDispatch();
+
   useEffect(() => {
     const searchBar = document.querySelector(".search-bar");
+    const searchBarSubmit = document.querySelector(".search-bar").nextSibling;
     const brand = document.querySelector(".brand").lastChild;
     const widthX = window.matchMedia("(max-width: 600px)");
 
     const searchBarExpand = () => {
       if (widthX.matches) {
-        brand.classList.add("search");
+        setTimeout(() => {
+          brand.classList.add("on-search");
+          searchBarSubmit.classList.add("on");
+        }, 300);
       }
     };
     const searchBarCollapse = () => {
       if (widthX.matches) {
         setTimeout(() => {
-          brand.classList.remove("search");
+          brand.classList.remove("on-search");
+          searchBarSubmit.classList.remove("on");
         }, 300);
       }
     };
@@ -55,6 +56,17 @@ function App(props) {
       els: { searchBar },
       funcs: { searchBarExpand, searchBarCollapse },
     });
+
+    const header = document.querySelector(".header");
+    window.onscroll = () => {
+      console.log("windows.pageYOffset", window.pageYOffset);
+      if (window.pageYOffset > 0) {
+        header.classList.add("onscroll");
+      } else {
+        header.classList.remove("onscroll");
+      }
+    };
+
     return () => {
       searchBar.removeEventListener("focusin", searchBarExpand);
       searchBar.removeEventListener("focusout", searchBarCollapse);
@@ -72,13 +84,16 @@ function App(props) {
   };
 
   const handleCartSection = () => {
-    const cartSection = document.querySelector(".cart-section");
+    const cartSection = document.querySelector(".cart-tow").lastChild;
+    const cartButton = cartSection.previousSibling;
     if (cartSection.classList.contains("hidden")) {
+      cartButton.classList.add("clicked");
       cartSection.classList.remove("hidden");
       setTimeout(() => {
         cartSection.classList.remove("visuallyhidden");
       }, 20);
     } else {
+      cartButton.classList.remove("clicked");
       cartSection.classList.add("visuallyhidden");
       cartSection.addEventListener(
         "transitionend",
@@ -97,10 +112,6 @@ function App(props) {
     window.history.pushState(null, "", newRelativePathQuery);
     // window.location.search = searchParams.toString(); //causes reload page
   };
-  const logOutHandler = () => {
-    console.log("app logout");
-    dispatch(logout());
-  };
 
   return (
     <LoadContext.Provider
@@ -108,6 +119,8 @@ function App(props) {
         loadRef: loadRef,
         updateSamePage: updateSamePage,
         setUpdateSamePage: setUpdateSamePage,
+        preventFirstRender: preventFirstRender,
+        setPreventFirstRender: setPreventFirstRender,
       }}
     >
       <LoadingBar
@@ -120,6 +133,19 @@ function App(props) {
         waitingTime={700}
       />
       <div className="grid-container">
+        <div className="top">
+          {userInfo?._id ? (
+            <div className="user-info-section">
+              <CustomLink className="profile" loading to="/profile">
+                {userInfo.name}
+              </CustomLink>
+            </div>
+          ) : (
+            <CustomLink loading to="/login">
+              Login
+            </CustomLink>
+          )}
+        </div>
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
@@ -131,23 +157,12 @@ function App(props) {
             <Route render={(props) => <SearchBar {...props} />} />
           </div>
           <div className="header-links">
-            <div className="cart-link" onClick={handleCartSection}>
-              Cart{" "}
+            <div className="cart-tow">
+              <button className="cart-button" onClick={handleCartSection}>
+                <span className="cart-text"> Cart </span>
+              </button>
+              <CartSection />
             </div>
-            {userInfo?._id ? (
-              <div className="user-info-section">
-                <CustomLink className="profile" loading to="/profile">
-                  {userInfo.name}
-                </CustomLink>
-                <div className="logout" onClick={() => logOutHandler()}>
-                  Logout
-                </div>
-              </div>
-            ) : (
-              <CustomLink loading to="/login">
-                Login
-              </CustomLink>
-            )}
           </div>
         </header>
         <aside className="sidebar">
@@ -179,83 +194,42 @@ function App(props) {
           </ul>
         </aside>
         <main className="main">
-          <div className="content"></div>
-          <CartSection />
-
           <Route
             path="/products"
-            render={(props) => (
-              <AuthWrapper>
-                {" "}
-                <ProductsScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <ProductsScreen {...props} />}
           />
           <Route
             path="/shipping"
-            render={(props) => (
-              <AuthWrapper>
-                <ShippingScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <ShippingScreen {...props} />}
           />
           <Route
             path="/payment"
-            render={(props) => (
-              <AuthWrapper>
-                <PaymentScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <PaymentScreen {...props} />}
           />
           <Route
             path="/placeorder"
-            render={(props) => (
-              <AuthWrapper>
-                <PlaceOrderScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <PlaceOrderScreen {...props} />}
           />
           <Route
             path="/register"
-            render={(props) => (
-              <AuthWrapper>
-                <RegisterScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <RegisterScreen {...props} />}
           />
-          <Route
-            path="/login"
-            render={(props) => (
-              <AuthWrapper>
-                <LoginScreen {...props} />
-              </AuthWrapper>
-            )}
-          />
+          <Route path="/login" render={(props) => <LoginScreen {...props} />} />
           <Route
             path="/product/:id"
-            render={(props) => (
-              <AuthWrapper>
-                <ProductScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <ProductScreen {...props} />}
           />
           <Route
             path="/cart/:id?"
-            render={(props) => (
-              <AuthWrapper>
-                <CartScreen {...props} />
-              </AuthWrapper>
-            )}
+            render={(props) => <CartScreen {...props} />}
           />
-          <Route
-            path={["/search", "/"]}
-            exact
-            render={(props) => (
-              <AuthWrapper>
-                <HomeScreen {...props} />
-              </AuthWrapper>
-            )}
-          />
+          <Suspense fallback={<div>Waiting For Authentication ...</div>}>
+            <Route
+              path={["/search", "/"]}
+              exact
+              render={(props) => <HomeScreen {...props} />}
+            />
+          </Suspense>
         </main>
         <footer className="footer">All right reserved.</footer>
       </div>

@@ -4,7 +4,8 @@ import { addToCart, removeFromCart } from "../actions/cartActions";
 import { Link } from "react-router-dom";
 import { LoadContext } from "../App";
 import { isEmpty } from "../components/Utility";
-import {push} from "connected-react-router"
+import { push } from "connected-react-router";
+import withAuthentication from "../components/withAuthentication";
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
@@ -16,9 +17,9 @@ function CartScreen(props) {
   const removeFromCartHandler = (productId) => {
     dispatch(removeFromCart(productId));
   };
-  console.log('props.location', props.location)
+  console.log("props.location", props.location);
   useEffect(() => {
-   console.log('USEEFFECT')
+    console.log("USEEFFECT");
     if (cartItems) {
       loadRef.current.complete();
     }
@@ -26,7 +27,7 @@ function CartScreen(props) {
   }, []);
   const checkOutHandler = () => {
     if (isEmpty(userInfo)) dispatch(push("/login?redirect=shipping"));
-    else dispatch(push("/shipping"))
+    else dispatch(push("/shipping"));
   };
   return (
     <div className="cart">
@@ -100,4 +101,4 @@ function CartScreen(props) {
   );
 }
 
-export default CartScreen;
+export default withAuthentication(CartScreen);
