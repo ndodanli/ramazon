@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { LoadContext } from "../App";
 import { isEmpty } from "../components/Utility";
 import { push } from "connected-react-router";
-import withAuthentication from "../components/withAuthentication";
+import withAuthentication from "../components/AuthRoute";
 function CartScreen(props) {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
@@ -101,4 +101,4 @@ function CartScreen(props) {
   );
 }
 
-export default withAuthentication(CartScreen);
+export default CartScreen;

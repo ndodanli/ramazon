@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, Suspense, lazy } from "react";
 import "./App.css";
-import { Route, withRouter } from "react-router-dom";
+import { Route, withRouter, Link } from "react-router-dom";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -16,6 +16,8 @@ import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import CustomLink from "./components/CustomLink";
 import { logout } from "./actions/userActions";
+import withAuthentication from "./components/AuthRoute";
+import AuthRoute from "./components/AuthRoute";
 export const LoadContext = React.createContext();
 const HomeScreen = lazy(() => import("./screens/HomeScreen"));
 function App(props) {
@@ -25,9 +27,7 @@ function App(props) {
   const userDetails = useSelector((state) => state.userDetails);
   const { userInfo } = userDetails;
   const userLoginStatus = useSelector((state) => state.userLoginStatus);
-  const {
-    loginStatus,
-  } = userLoginStatus;
+  const { loginStatus } = userLoginStatus;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -149,9 +149,9 @@ function App(props) {
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
-            <CustomLink updateSamePage to="/">
+            <Link  to="/">
               ramazon
-            </CustomLink>
+            </Link>
           </div>
           <div className="search-bar-section">
             <Route render={(props) => <SearchBar {...props} />} />
@@ -224,11 +224,7 @@ function App(props) {
             render={(props) => <CartScreen {...props} />}
           />
           <Suspense fallback={<div>Waiting For Authentication ...</div>}>
-            <Route
-              path={["/search", "/"]}
-              exact
-              render={(props) => <HomeScreen {...props} />}
-            />
+            <AuthRoute location={props.location} path={["/search", "/"]} exact component={withRouter(HomeScreen)} />
           </Suspense>
         </main>
         <footer className="footer">All right reserved.</footer>

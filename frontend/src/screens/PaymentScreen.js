@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { savePayment } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
-import withAuthentication from "../components/withAuthentication";
+import withAuthentication from "../components/AuthRoute";
 function PaymentScreen(props) {
   const [paymentMethod, setpaymentMethod] = useState("");
   const dispatch = useDispatch();
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(savePayment({paymentMethod:paymentMethod}));
-    props.history.push('placeorder')
+    dispatch(savePayment({ paymentMethod: paymentMethod }));
+    props.history.push("placeorder");
   };
 
   return (
@@ -23,18 +23,18 @@ function PaymentScreen(props) {
             </li>
             <li>
               <div>
-            <input
-                type="radio"
-                name="paymentMethod"
-                id="paymentMethod"
-                value="paypal"
-                onChange={(e) => setpaymentMethod(e.target.value)}
-              />
-              <label htmlFor="paymentMethod">Paypal</label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  id="paymentMethod"
+                  value="paypal"
+                  onChange={(e) => setpaymentMethod(e.target.value)}
+                />
+                <label htmlFor="paymentMethod">Paypal</label>
               </div>
             </li>
             <li>
-            <button type="submit" className="button primary">
+              <button type="submit" className="button primary">
                 Continue
               </button>
             </li>
@@ -45,4 +45,4 @@ function PaymentScreen(props) {
   );
 }
 
-export default withAuthentication(PaymentScreen);
+export default PaymentScreen;

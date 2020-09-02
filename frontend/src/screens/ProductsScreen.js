@@ -5,8 +5,8 @@ import {
   listProduct,
   deleteProduct,
 } from "../actions/productActions";
-import withAuthWrapper from "../components/withAuthentication";
-import withAuthentication from "../components/withAuthentication";
+import withAuthWrapper from "../components/AuthRoute";
+import withAuthentication from "../components/AuthRoute";
 const initialState = {};
 const productReducer = (state, action) => {
   switch (action.type) {
@@ -277,4 +277,4 @@ function ProductsScreen(props) {
   );
 }
 
-export default withAuthentication(ProductsScreen);
+export default ProductsScreen;

@@ -19,7 +19,6 @@ import {
   PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CATEGORY_FAIL,
 } from "../constants/categoryConstants";
-
 function productListReducer(state = { products: [] }, action) {
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
@@ -31,10 +30,9 @@ function productListReducer(state = { products: [] }, action) {
         totalItemCount: action.payload.totalItemCount,
       };
     case PRODUCT_LIST_FAIL:
-      console.log('fail')
       return { loading: false, error: action.payload };
-      case PRODUCT_LIST_CLEAN:
-        return {loading: true, products: [] }
+    case PRODUCT_LIST_CLEAN:
+      return { loading: undefined, products: [] };
     case PRODUCT_CATEGORY_REQUEST:
       return { loading: true, products: [] };
     case PRODUCT_CATEGORY_SUCCESS:
@@ -55,7 +53,7 @@ function productDetailsReducer(state = { product: {} }, action) {
     case PRODUCT_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     case PRODUCT_DETAILS_CLEAN:
-      return { loading:true, product: {} };
+      return { loading: true, product: {} };
     default:
       return state;
   }

@@ -6,9 +6,9 @@ import Paginate from "../components/Paginate";
 import { LoadContext } from "../App";
 import { PRODUCT_LIST_CLEAN } from "../constants/productConstants";
 import CustomLink from "../components/CustomLink";
-import AuthWrapper from "../components/withAuthentication";
-import withAuthWrapper from "../components/withAuthentication";
-import withAuthentication from "../components/withAuthentication";
+import AuthWrapper from "../components/AuthRoute";
+import withAuthWrapper from "../components/AuthRoute";
+import withAuthentication from "../components/AuthRoute";
 
 function HomeScreen(props) {
   const preventFirstRender = useRef(true);
@@ -19,7 +19,7 @@ function HomeScreen(props) {
   console.log("userInfo HOME", userInfo);
   const searchParams = getParams(window.location.search);
   const { loadRef } = useContext(LoadContext);
-  const numOfItemsInPage = 1000,
+  const numOfItemsInPage = 32,
     path = "/search",
     maxPage = 5;
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ function HomeScreen(props) {
   // console.log("productList", productList);
   // console.log("loading STATE HOME SCREEN", loading);
   useEffect(() => {
-    // console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
+     console.log("HOME SCREEN USEEFFECT []");
     dispatch(listProduct(searchParams, numOfItemsInPage));
   }, []);
   useEffect(() => {
@@ -41,8 +41,10 @@ function HomeScreen(props) {
     }
     preventFirstRender.current = false;
   }, [loading]);
-
-  return loading ? (
+  console.log('props HOME', props.location)
+  console.log('loading HOME', loading)
+  console.log('products', products)
+  return loading || loading === undefined ? (
     <Fragment>
       <ul className="products">
         {[...Array(numOfItemsInPage).keys()].map((key) => {
@@ -116,4 +118,4 @@ const getParams = (locationSearch) => {
     category: urlSearchParams.get("category") ?? "",
   };
 };
-export default withAuthentication(HomeScreen);
+export default HomeScreen;

@@ -6,7 +6,7 @@ import { addToCart } from "../actions/cartActions";
 import { LoadContext } from "../App";
 import { PRODUCT_DETAILS_CLEAN } from "../constants/productConstants";
 import CustomLink from "../components/CustomLink";
-import withAuthentication from "../components/withAuthentication";
+import withAuthentication from "../components/AuthRoute";
 function ProductScreen(props) {
   const [qty, setQty] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
@@ -116,5 +116,4 @@ function ProductScreen(props) {
   );
 }
 
-export default withAuthentication(ProductScreen);
-
+export default ProductScreen;

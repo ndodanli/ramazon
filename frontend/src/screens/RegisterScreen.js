@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { register } from "../actions/userActions";
-import withAuthentication from "../components/withAuthentication";
+import withAuthentication from "../components/AuthRoute";
 function RegisterScreen(props) {
   const [userName, setUserName] = useState("");
   const [name, setName] = useState("");
@@ -101,4 +101,4 @@ function RegisterScreen(props) {
   );
 }
 
-export default withAuthentication(RegisterScreen);
+export default RegisterScreen;
