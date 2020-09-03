@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { createOrder } from "../actions/orderActions";
-import withAuthentication from "../components/AuthRoute";
+import withAuthentication from "../components/withAuthentication";
 function PlaceOrderScreen(props) {
   const cart = useSelector((state) => state.cart);
   const { cartItems, shipping, payment } = cart;
@@ -123,4 +123,4 @@ function PlaceOrderScreen(props) {
   );
 }
 
-export default PlaceOrderScreen;
+export default withAuthentication(PlaceOrderScreen);

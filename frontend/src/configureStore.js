@@ -9,21 +9,21 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const resetEnhancer = (rootReducer) => (state, action) => {
   if (action.type !== "@@router/LOCATION_CHANGE") {
-    console.log("NOT @@router/LOCATION_CHANGE: ACTION", action);
     console.log("NOT @@router/LOCATION_CHANGE: STATE", state);
+    console.log("NOT @@router/LOCATION_CHANGE: ACTION", action);
 
     return rootReducer(state, action);
   }
-  console.log("action", action);
   console.log("state", state);
-  const newState = rootReducer({ cart: { ...state.cart } }, {});
-  newState.router = state.router;
+  console.log("action", action);
+  // console.log("createRootReducer(history)", createRootReducer(history));
+  const newState = rootReducer({ ...state, userDetails: {}, productList: {} }, action, );
   return newState;
 };
 
 export default function configureStore(initialState) {
   const store = createStore(
-    createRootReducer(history), // root reducer with router state
+    resetEnhancer(createRootReducer(history)), // root reducer with router state
     initialState,
     composeEnhancer(
       applyMiddleware(

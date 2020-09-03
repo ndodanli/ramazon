@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { savePayment } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
-import withAuthentication from "../components/AuthRoute";
+import withAuthentication from "../components/withAuthentication";
 function PaymentScreen(props) {
   const [paymentMethod, setpaymentMethod] = useState("");
   const dispatch = useDispatch();
@@ -45,4 +45,4 @@ function PaymentScreen(props) {
   );
 }
 
-export default PaymentScreen;
+export default withAuthentication(PaymentScreen);

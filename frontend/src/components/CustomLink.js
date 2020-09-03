@@ -20,7 +20,7 @@ function CustomLink(props) {
         const onClk = props.onClick;
         if (onClk) onClk();
         // setPreventFirstRender(true);
-        // setUpdateSamePage((prevState) => !prevState);
+        setUpdateSamePage((prevState) => !prevState);
       }}
     >
       {props.children}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { saveShipping } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
-import withAuthentication from "../components/AuthRoute";
+import withAuthentication from "../components/withAuthentication";
 function ShippingScreen(props) {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -71,4 +71,4 @@ function ShippingScreen(props) {
   );
 }
 
-export default ShippingScreen;
+export default withAuthentication(ShippingScreen);

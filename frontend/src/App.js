@@ -15,9 +15,6 @@ import CartSection from "./components/CartSection";
 import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import CustomLink from "./components/CustomLink";
-import { logout } from "./actions/userActions";
-import withAuthentication from "./components/AuthRoute";
-import AuthRoute from "./components/AuthRoute";
 export const LoadContext = React.createContext();
 const HomeScreen = lazy(() => import("./screens/HomeScreen"));
 function App(props) {
@@ -59,7 +56,6 @@ function App(props) {
 
     const header = document.querySelector(".header");
     window.onscroll = () => {
-      console.log("windows.pageYOffset", window.pageYOffset);
       if (window.pageYOffset > 0) {
         header.classList.add("onscroll");
       } else {
@@ -149,9 +145,7 @@ function App(props) {
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
-            <Link  to="/">
-              ramazon
-            </Link>
+            <CustomLink to="/">ramazon</CustomLink>
           </div>
           <div className="search-bar-section">
             <Route render={(props) => <SearchBar {...props} />} />
@@ -194,37 +188,45 @@ function App(props) {
           </ul>
         </aside>
         <main className="main">
-          <Route
-            path="/products"
-            render={(props) => <ProductsScreen {...props} />}
-          />
-          <Route
-            path="/shipping"
-            render={(props) => <ShippingScreen {...props} />}
-          />
-          <Route
-            path="/payment"
-            render={(props) => <PaymentScreen {...props} />}
-          />
-          <Route
-            path="/placeorder"
-            render={(props) => <PlaceOrderScreen {...props} />}
-          />
-          <Route
-            path="/register"
-            render={(props) => <RegisterScreen {...props} />}
-          />
-          <Route path="/login" render={(props) => <LoginScreen {...props} />} />
-          <Route
-            path="/product/:id"
-            render={(props) => <ProductScreen {...props} />}
-          />
-          <Route
-            path="/cart/:id?"
-            render={(props) => <CartScreen {...props} />}
-          />
           <Suspense fallback={<div>Waiting For Authentication ...</div>}>
-            <AuthRoute location={props.location} path={["/search", "/"]} exact component={withRouter(HomeScreen)} />
+            <Route
+              path="/products"
+              render={(props) => <ProductsScreen {...props} />}
+            />
+            <Route
+              path="/shipping"
+              render={(props) => <ShippingScreen {...props} />}
+            />
+            <Route
+              path="/payment"
+              render={(props) => <PaymentScreen {...props} />}
+            />
+            <Route
+              path="/placeorder"
+              render={(props) => <PlaceOrderScreen {...props} />}
+            />
+            <Route
+              path="/register"
+              render={(props) => <RegisterScreen {...props} />}
+            />
+            <Route
+              path="/login"
+              render={(props) => <LoginScreen {...props} />}
+            />
+            <Route
+              path="/product/:id"
+              render={(props) => <ProductScreen {...props} />}
+            />
+            <Route
+              path="/cart/:id?"
+              render={(props) => <CartScreen {...props} />}
+            />
+
+            <Route
+              path={["/search", "/"]}
+              exact
+              render={(props) => <HomeScreen {...props} />}
+            />
           </Suspense>
         </main>
         <footer className="footer">All right reserved.</footer>

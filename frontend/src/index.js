@@ -11,7 +11,7 @@ const cartItems = Cookie.getJSON("cartItems") || [];
 
 const store = configureStore({
   cart: { cartItems, shipping: {}, payment: {} },
-  userDetails: { userInfo: {} },
+  userDetails: { userInfo: {}, loading: undefined },
   productList: { products: [], totalItemCount: 0 },
   productDetails: { product: {} },
 });

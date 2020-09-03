@@ -73,7 +73,6 @@ const register = (userName, name, email, password) => async (dispatch) => {
 };
 
 const auth = () => async (dispatch) => {
-  
   dispatch({ type: USER_AUTH_REQUEST });
   try {
     const { data } = await axios.get("/api/users/user");
