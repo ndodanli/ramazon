@@ -1,11 +1,9 @@
-import React, { useEffect, useReducer, useState, useContext } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   saveProduct,
-  listProduct,
   deleteProduct,
 } from "../actions/productActions";
-import withAuthWrapper from "../components/withAuthentication";
 import withAuthentication from "../components/withAuthentication";
 const initialState = {};
 const productReducer = (state, action) => {
@@ -33,7 +31,7 @@ const productReducer = (state, action) => {
   }
 };
 
-function ProductsScreen(props) {
+function ProductsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [product, productDispatch] = useReducer(productReducer, initialState);
   const productList = useSelector((state) => state.productList);
@@ -44,16 +42,12 @@ function ProductsScreen(props) {
 
   const productSave = useSelector((state) => state.productSave);
   const {
-    loading: loadingSave,
     success: successSave,
-    error: errorSave,
   } = productSave;
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
-    loading: loadingDelete,
     success: successDelete,
-    error: errorDelete,
   } = productDelete;
 
   const dispatch = useDispatch();

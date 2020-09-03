@@ -5,7 +5,6 @@ import { detailsProduct } from "../actions/productActions";
 import { addToCart } from "../actions/cartActions";
 import { LoadContext } from "../App";
 import { PRODUCT_DETAILS_CLEAN } from "../constants/productConstants";
-import CustomLink from "../components/CustomLink";
 import withAuthentication from "../components/withAuthentication";
 function ProductScreen(props) {
   const [qty, setQty] = useState(1);
@@ -17,7 +16,7 @@ function ProductScreen(props) {
   // console.log("loading PRODUCT SCREEN", loading);
 
   useEffect(() => {
-    // console.log("PRODUCT SCREEN USEEFFECT", loading);
+    console.log("PRODUCT SCREEN USEEFFECT", loading);
 
     dispatch(detailsProduct(props.match.params.id));
     return () => {
@@ -117,4 +116,3 @@ function ProductScreen(props) {
 }
 
 export default withAuthentication(ProductScreen);
-

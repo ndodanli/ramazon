@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { login } from "../actions/userActions";
 import { push } from "connected-react-router";
 import { LoadContext } from "../App";
+import withAuthentication from "../components/withAuthentication";
 function LoginScreen(props) {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -132,4 +133,4 @@ function isEmpty(obj) {
   }
 }
 
-export default LoginScreen;
+export default withAuthentication(LoginScreen);

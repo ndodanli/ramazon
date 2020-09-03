@@ -1,29 +1,35 @@
 import React, { useEffect, useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { auth } from "../actions/userActions";
 import { LoadContext } from "../App";
-const withAuthentication = (WrappedComponent) => (props) => {
-  const {
-    updateSamePage,
-    preventFirstRender,
-    setPreventFirstRender,
-  } = useContext(LoadContext);
+import { isEmpty } from "./Utility";
+import { Redirect } from "react-router-dom";
+
+const withAuthentication = (AuthComponent) => (props) => {
   const dispatch = useDispatch();
+  const { updateSamePage } = useContext(LoadContext);
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading } = userDetails;
-  console.log("loading WRAPPER", loading);
-  console.log("preventFirstRender", preventFirstRender);
+  const { loading, userInfo } = userDetails;
   useEffect(() => {
-    setPreventFirstRender(false);
+    console.log("useeffect withAuthentication");
     dispatch(auth());
   }, [updateSamePage]);
-  //if(statement) As long as the expression inside the parentheses returns something other
-  //than false, null, 0, "" or undefined. the block in the if statement will
-  // be executed
-  return loading || preventFirstRender ? (
+
+  console.log("loading AUTH", loading);
+  return loading || loading === undefined ? (
     <div>WITHAUTH LOADING</div>
+  ) : !props.onlyForAuth ? (
+    <AuthComponent {...props} />
+  ) : isEmpty(userInfo) ? (
+    <Redirect
+      to={{
+        pathname: "/login",
+        state: { from: props.location },
+      }}
+    />
   ) : (
-    <WrappedComponent {...props} />
+    <AuthComponent {...props} />
   );
 };
+
 export default withAuthentication;

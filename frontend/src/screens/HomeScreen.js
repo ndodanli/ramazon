@@ -1,16 +1,14 @@
-import React, { useEffect, useContext, useRef, Fragment, memo } from "react";
-import { Link, withRouter } from "react-router-dom";
+import React, { useEffect, useContext, useRef, Fragment } from "react";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { listProduct } from "../actions/productActions";
 import Paginate from "../components/Paginate";
 import { LoadContext } from "../App";
-import { PRODUCT_LIST_CLEAN } from "../constants/productConstants";
 import CustomLink from "../components/CustomLink";
-import AuthWrapper from "../components/withAuthentication";
-import withAuthWrapper from "../components/withAuthentication";
 import withAuthentication from "../components/withAuthentication";
 
 function HomeScreen(props) {
+  console.log("props", props);
   const preventFirstRender = useRef(true);
   const productList = useSelector((state) => state.productList);
   const { products, totalItemCount, loading, error } = productList;
@@ -19,7 +17,7 @@ function HomeScreen(props) {
   console.log("userInfo HOME", userInfo);
   const searchParams = getParams(window.location.search);
   const { loadRef } = useContext(LoadContext);
-  const numOfItemsInPage = 1000,
+  const numOfItemsInPage = 32,
     path = "/search",
     maxPage = 5;
   const dispatch = useDispatch();
@@ -28,28 +26,27 @@ function HomeScreen(props) {
   // console.log("productList", productList);
   // console.log("loading STATE HOME SCREEN", loading);
   useEffect(() => {
-    // console.log("HOME SCREEN USEEFFECT DEPENDENCIES");
+    console.log("HOME SCREEN USEEFFECT []");
     dispatch(listProduct(searchParams, numOfItemsInPage));
   }, []);
   useEffect(() => {
-    if (!preventFirstRender.current) {
-      console.log("HOME SCREEN USEEFFECT LOADING");
-      if (loading === false) {
-        // console.log("worked");
-        loadRef.current.complete();
-      }
+    console.log("HOME SCREEN USEEFFECT LOADING");
+    if (loading === false) {
+      loadRef.current.complete();
+      // console.log("worked");
     }
-    preventFirstRender.current = false;
   }, [loading]);
-
-  return loading ? (
+  //compare two branch(loading auth repeating)
+  console.log("props HOME", props.location);
+  console.log("loading HOME", loading);
+  console.log("products", products);
+  return loading || loading === undefined ? (
     <Fragment>
       <ul className="products">
         {[...Array(numOfItemsInPage).keys()].map((key) => {
           return (
-            
             <li key={key}>
-              {console.log('PRODUCTS LOADING TEST')}
+              {console.log("PRODUCTS LOADING TEST")}
               <div className="product">
                 <div className="product-image loading"> </div>
                 <div className="product-name loading"> </div>
@@ -71,7 +68,7 @@ function HomeScreen(props) {
         {products.map((product) => {
           return (
             <li key={product._id}>
-              {console.log('PRODUCTS TEST')}
+              {console.log("PRODUCTS TEST")}
               <div className={`product`}>
                 <CustomLink loading to={`/product/${product._id}`}>
                   <img
