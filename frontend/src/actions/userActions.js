@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookie from "js-cookie";
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -11,10 +10,8 @@ import {
   USER_AUTH_SUCCESS,
   USER_AUTH_FAIL,
   USER_LOGOUT_FAIL,
-  USER_LOGOUT_SUCCESS,
-  USER_LOGOUT_REQUEST,
 } from "../constants/userConstants";
-import Axios from "axios";
+import { push } from "connected-react-router";
 const login = (username, password, kmLoggedIn, rememberMe) => async (
   dispatch
 ) => {
@@ -41,10 +38,11 @@ const login = (username, password, kmLoggedIn, rememberMe) => async (
 };
 
 const logout = () => async (dispatch) => {
-  dispatch({ type: USER_LOGOUT_REQUEST });
   try {
     const { data } = await axios.get("/api/users/logout");
-    dispatch({ type: USER_LOGOUT_SUCCESS, payload: data });
+    if (!data) {
+      dispatch(push("/login"));
+    }
   } catch (error) {
     dispatch({ type: USER_LOGOUT_FAIL, payload: error.response.data });
   }
@@ -78,7 +76,6 @@ const auth = () => async (dispatch) => {
     const { data } = await axios.get("/api/users/user");
     dispatch({ type: USER_AUTH_SUCCESS, payload: data });
   } catch (error) {
-    
     dispatch({ type: USER_AUTH_FAIL, payload: error.response.data });
   }
 };

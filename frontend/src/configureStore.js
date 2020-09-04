@@ -17,7 +17,7 @@ const resetEnhancer = (rootReducer) => (state, action) => {
   console.log("state", state);
   console.log("action", action);
   // console.log("createRootReducer(history)", createRootReducer(history));
-  const newState = rootReducer({ ...state, userDetails: {}, productList: {} }, action, );
+  const newState = rootReducer({ ...state, userDetails: {}, productList: {}, userLoginStatus: {} }, action, );
   return newState;
 };
 

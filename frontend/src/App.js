@@ -15,16 +15,15 @@ import CartSection from "./components/CartSection";
 import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import CustomLink from "./components/CustomLink";
+import { logout } from "./actions/userActions";
 export const LoadContext = React.createContext();
 const HomeScreen = lazy(() => import("./screens/HomeScreen"));
-function App(props) {
+function App() {
   const loadRef = useRef(null);
   const [updateSamePage, setUpdateSamePage] = useState(false);
   const [preventFirstRender, setPreventFirstRender] = useState(true);
   const userDetails = useSelector((state) => state.userDetails);
   const { userInfo } = userDetails;
-  const userLoginStatus = useSelector((state) => state.userLoginStatus);
-  const { loginStatus } = userLoginStatus;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,9 +54,12 @@ function App(props) {
     });
 
     const header = document.querySelector(".header");
+    const accountSection = header.lastChild.firstChild;
+    const cartTow = accountSection.nextSibling;
     window.onscroll = () => {
       if (window.pageYOffset > 0) {
         header.classList.add("onscroll");
+        accountSection.style = `right:${cartTow.offsetWidth + 7}px;`;
       } else {
         header.classList.remove("onscroll");
       }
@@ -68,10 +70,11 @@ function App(props) {
       searchBar.removeEventListener("focusout", searchBarCollapse);
     };
   }, []);
-
-  useEffect(() => {
-    if (loginStatus === false) props.history.push("/login");
-  }, [loginStatus]);
+  console.log("userInfo", userInfo);
+  // useEffect(() => {
+  //   console.error("USEEFFECT LOGIN");
+  //   if (loginStatus === false) props.history.push("/login");
+  // }, [loadingLoginStatus]);
   const openMenu = () => {
     document.querySelector(".sidebar").classList.add("open");
   };
@@ -109,6 +112,10 @@ function App(props) {
     // window.location.search = searchParams.toString(); //causes reload page
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <LoadContext.Provider
       value={{
@@ -129,19 +136,7 @@ function App(props) {
         waitingTime={700}
       />
       <div className="grid-container">
-        <div className="top">
-          {userInfo?._id ? (
-            <div className="user-info-section">
-              <CustomLink className="profile" loading to="/profile">
-                {userInfo.name}
-              </CustomLink>
-            </div>
-          ) : (
-            <CustomLink loading to="/login">
-              Login
-            </CustomLink>
-          )}
-        </div>
+        <div className="top"></div>
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
@@ -151,6 +146,26 @@ function App(props) {
             <Route render={(props) => <SearchBar {...props} />} />
           </div>
           <div className="header-links">
+            <div className="account-section">
+              <button className="account-button">Account</button>
+              <div className="account-content">
+                <Link to="/profile">Profile</Link>
+                {userInfo?._id ? (
+                  <div>
+                    <div className="user-info-section">
+                      <CustomLink className="profile" loading to="/profile">
+                        {userInfo.name}
+                      </CustomLink>
+                    </div>
+                    <button onClick={handleLogout}>Logout</button>
+                  </div>
+                ) : (
+                  <CustomLink loading to="/login">
+                    Login
+                  </CustomLink>
+                )}
+              </div>
+            </div>
             <div className="cart-tow">
               <button className="cart-button" onClick={handleCartSection}>
                 <span className="cart-text"> Cart </span>
@@ -189,6 +204,7 @@ function App(props) {
         </aside>
         <main className="main">
           <Suspense fallback={<div>Waiting For Authentication ...</div>}>
+            {console.log("worked")}
             <Route
               path="/products"
               render={(props) => <ProductsScreen {...props} />}
@@ -221,7 +237,6 @@ function App(props) {
               path="/cart/:id?"
               render={(props) => <CartScreen {...props} />}
             />
-
             <Route
               path={["/search", "/"]}
               exact

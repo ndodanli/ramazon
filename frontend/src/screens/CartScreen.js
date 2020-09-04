@@ -18,13 +18,7 @@ function CartScreen(props) {
     dispatch(removeFromCart(productId));
   };
   console.log("props.location", props.location);
-  useEffect(() => {
-    console.log("USEEFFECT");
-    if (cartItems) {
-      loadRef.current.complete();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   const checkOutHandler = () => {
     if (isEmpty(userInfo)) dispatch(push("/login?redirect=shipping"));
     else dispatch(push("/shipping"));

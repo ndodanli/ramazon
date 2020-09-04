@@ -64,7 +64,7 @@ button {
   height: 100%;
 }
 .top {
-  animation:fade-in 300ms linear;
+  animation: fade-in 300ms linear;
   background-color: rgba(0, 0, 0, 0.9);
 }
 .header {
@@ -112,6 +112,45 @@ button {
     color: rgb(31, 30, 30);
     text-decoration: none;
     align-self: flex-end;
+  }
+  .account-section {
+    &:hover .account-content {
+      display: block;
+    }
+    &:hover .account-button {
+      transition: background-color 1000ms ease;
+      background-color: #9b9a9a;
+    }
+    position: relative;
+    display: inline-block;
+    .account-button {
+      margin-top: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      outline: none;
+      border: none;
+      border-radius: 1px;
+      padding: 2px;
+      box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
+    }
+    .account-content {
+      display: none;
+      position: absolute;
+      background-color: #d4d3d3;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        &:hover {
+          transition: background-color 1000ms ease;
+          background-color: rgb(206, 205, 205);
+        }
+      }
+    }
   }
 }
 .user-info-section {

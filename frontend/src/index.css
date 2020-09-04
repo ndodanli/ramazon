@@ -188,6 +188,56 @@ button {
       align-self: flex-end;
 }
 
+.header-links .account-section {
+  position: relative;
+  display: inline-block;
+}
+
+.header-links .account-section:hover .account-content {
+  display: block;
+}
+
+.header-links .account-section:hover .account-button {
+  -webkit-transition: background-color 1000ms ease;
+  transition: background-color 1000ms ease;
+  background-color: #9b9a9a;
+}
+
+.header-links .account-section .account-button {
+  margin-top: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 1px;
+  padding: 2px;
+  -webkit-box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
+          box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
+}
+
+.header-links .account-section .account-content {
+  display: none;
+  position: absolute;
+  background-color: #d4d3d3;
+  min-width: 160px;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.header-links .account-section .account-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.header-links .account-section .account-content a:hover {
+  -webkit-transition: background-color 1000ms ease;
+  transition: background-color 1000ms ease;
+  background-color: #cecdcd;
+}
+
 .user-info-section {
   display: -webkit-box;
   display: -ms-flexbox;
