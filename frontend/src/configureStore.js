@@ -17,8 +17,11 @@ const resetEnhancer = (rootReducer) => (state, action) => {
   console.log("state", state);
   console.log("action", action);
   // console.log("createRootReducer(history)", createRootReducer(history));
-  const newState = rootReducer({ ...state, userDetails: {}, productList: {}, userLoginStatus: {} }, action, );
-  return newState;
+  const newRootReducer = rootReducer(
+    { cart: { cartItems: [...state.cart.cartItems] } },
+    action
+  );
+  return newRootReducer;
 };
 
 export default function configureStore(initialState) {

@@ -64,7 +64,6 @@ function App() {
     const accountSection = header.lastChild.firstChild;
     const cartTow = accountSection.nextSibling;
     window.onscroll = () => {
-      console.log('accountSection', accountSection)
       if (window.pageYOffset > 0) {
         header.classList.add("onscroll");
         accountSection.style = `padding-top:${cartTow.offsetHeight + 7}px;`;

@@ -19,9 +19,6 @@ function ProductScreen(props) {
     console.log("PRODUCT SCREEN USEEFFECT", loading);
 
     dispatch(detailsProduct(props.match.params.id));
-    return () => {
-      dispatch({ type: PRODUCT_DETAILS_CLEAN });
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,12 +48,13 @@ function ProductScreen(props) {
       <div className="back-to-result">
         <Link to="/">Back to results</Link>
       </div>
-      {loading ? (
-        <div>Loading...</div>
+      {loading === undefined ? (
+        <div>{console.log("PRODUCT LOADING TEST")}Loading...</div>
       ) : error ? (
         <div> {error}</div>
       ) : (
         <div className="details">
+          {console.log("PRODUCT TEST")}
           <div className="details-image">
             <img src={product.image} alt="product" />
           </div>

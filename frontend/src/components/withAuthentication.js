@@ -16,7 +16,7 @@ const withAuthentication = (AuthComponent) => (props) => {
   }, [updateSamePage]);
 
   console.log("loading AUTH", loading);
-  return loading || loading === undefined ? (
+  return loading === undefined ? (
     <div>WITHAUTH LOADING</div>
   ) : !props.onlyForAuth ? (
     <AuthComponent {...props} />
