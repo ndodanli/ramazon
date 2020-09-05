@@ -53,23 +53,27 @@ function App() {
       funcs: { searchBarExpand, searchBarCollapse },
     });
 
-    const header = document.querySelector(".header");
-    const accountSection = header.lastChild.firstChild;
-    const cartTow = accountSection.nextSibling;
-    window.onscroll = () => {
-      if (window.pageYOffset > 0) {
-        header.classList.add("onscroll");
-        accountSection.style = `right:${cartTow.offsetWidth + 7}px;`;
-      } else {
-        header.classList.remove("onscroll");
-      }
-    };
-
     return () => {
       searchBar.removeEventListener("focusin", searchBarExpand);
       searchBar.removeEventListener("focusout", searchBarCollapse);
     };
   }, []);
+
+  useEffect(() => {
+    const header = document.querySelector(".header");
+    const accountSection = header.lastChild.firstChild;
+    const cartTow = accountSection.nextSibling;
+    window.onscroll = () => {
+      console.log('accountSection', accountSection)
+      if (window.pageYOffset > 0) {
+        header.classList.add("onscroll");
+        accountSection.style = `padding-top:${cartTow.offsetHeight + 7}px;`;
+      } else {
+        header.classList.remove("onscroll");
+        accountSection.style = "";
+      }
+    };
+  }, [userInfo]);
   console.log("userInfo", userInfo);
   // useEffect(() => {
   //   console.error("USEEFFECT LOGIN");
@@ -146,26 +150,30 @@ function App() {
             <Route render={(props) => <SearchBar {...props} />} />
           </div>
           <div className="header-links">
-            <div className="account-section">
-              <button className="account-button">Account</button>
-              <div className="account-content">
-                <Link to="/profile">Profile</Link>
-                {userInfo?._id ? (
+            {userInfo?._id ? (
+              <div className="account-section">
+                <button className="account-button">Account</button>
+                <div className="account-content">
+                  <Link to="/profile">Profile</Link>
                   <div>
                     <div className="user-info-section">
                       <CustomLink className="profile" loading to="/profile">
                         {userInfo.name}
                       </CustomLink>
                     </div>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button className="logout-button" onClick={handleLogout}>
+                      Logout
+                    </button>
                   </div>
-                ) : (
-                  <CustomLink loading to="/login">
-                    Login
-                  </CustomLink>
-                )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div>
+              <CustomLink loading to="/login">
+                Login
+              </CustomLink>
+              </div>
+            )}
             <div className="cart-tow">
               <button className="cart-button" onClick={handleCartSection}>
                 <span className="cart-text"> Cart </span>

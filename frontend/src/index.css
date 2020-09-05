@@ -108,8 +108,8 @@ button {
       grid-template-areas: "top" "header" "main" "footer";
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
-  -ms-grid-rows: 3rem 7rem 1fr 4rem;
-      grid-template-rows: 3rem 7rem 1fr 4rem;
+  -ms-grid-rows: 3rem 7.1rem 1fr 4rem;
+      grid-template-rows: 3rem 7.1rem 1fr 4rem;
   height: 100%;
 }
 
@@ -131,7 +131,6 @@ button {
       -ms-flex-pack: justify;
           justify-content: space-between;
   border-bottom: 1px solid rgba(17, 17, 73, 0.9);
-  border-top: 1px solid rgba(17, 17, 73, 0.9);
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -141,6 +140,7 @@ button {
 
 .onscroll {
   position: fixed;
+  height: 7.1rem;
   -webkit-animation: slide-down 1s ease;
           animation: slide-down 1s ease;
 }
@@ -189,6 +189,8 @@ button {
 }
 
 .header-links .account-section {
+  border-top-right-radius: 1em;
+  border-top-left-radius: 1em;
   position: relative;
   display: inline-block;
 }
@@ -198,8 +200,10 @@ button {
 }
 
 .header-links .account-section:hover .account-button {
-  -webkit-transition: background-color 1000ms ease;
-  transition: background-color 1000ms ease;
+  border-top-right-radius: 1em;
+  border-top-left-radius: 1em;
+  -webkit-transition: background-color 800ms ease;
+  transition: background-color 800ms ease;
   background-color: #9b9a9a;
 }
 
@@ -210,18 +214,20 @@ button {
   outline: none;
   border: none;
   border-radius: 1px;
-  padding: 2px;
+  padding: 2px 55px 2px 55px;
   -webkit-box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
           box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
 }
 
 .header-links .account-section .account-content {
   display: none;
+  text-align: center;
   position: absolute;
   background-color: #d4d3d3;
-  min-width: 160px;
   -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  border-bottom-right-radius: 0.2em;
+  border-bottom-left-radius: 0.2em;
   z-index: 1;
 }
 
@@ -233,9 +239,18 @@ button {
 }
 
 .header-links .account-section .account-content a:hover {
-  -webkit-transition: background-color 1000ms ease;
-  transition: background-color 1000ms ease;
-  background-color: #cecdcd;
+  -webkit-transition: background-color 400ms ease;
+  transition: background-color 400ms ease;
+  background-color: #adacac;
+}
+
+.header-links .account-section .logout-button {
+  cursor: pointer;
+  background-color: rgba(190, 190, 192, 0.9);
+  outline: rgba(17, 17, 73, 0.9);
+  border: 1px solid rgba(17, 17, 73, 0.9);
+  -webkit-box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
+          box-shadow: 0 2px 5px 3px rgba(50, 50, 50, 0.1);
 }
 
 .user-info-section {
@@ -1011,6 +1026,9 @@ tbody > tr:nth-child(odd) {
     display: block;
     -webkit-animation: fade-in 300ms linear;
             animation: fade-in 300ms linear;
+  }
+  .account-button {
+    padding: 2px 8px 2px 8px !important;
   }
 }
 
