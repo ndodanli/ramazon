@@ -28,7 +28,7 @@ const listProduct = (searchParams, numOfItemsInPage) => async (dispatch) => {
 
 const saveProduct = (product) => async (dispatch, getState) => {
   const {
-    userSignin: { userInfo },
+    userDetails: { userInfo },
   } = getState();
   if (!product._id) {
     try {
@@ -79,7 +79,7 @@ const detailsProduct = (productId) => async (dispatch) => {
 
 const deleteProduct = (productId) => async (dispatch, getState) => {
   const {
-    userSignin: { userInfo },
+    userDetails: { userInfo },
   } = getState();
   try {
     const { data } = await Axios.delete("/api/products/" + productId, {

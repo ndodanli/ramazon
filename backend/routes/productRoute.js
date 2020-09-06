@@ -45,6 +45,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 router.post("/", async (req, res) => {
+  console.log(req.body)
   const product = new Product({
     name: req.body.name,
     price: req.body.price,

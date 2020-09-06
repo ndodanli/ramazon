@@ -37,8 +37,8 @@ function ProductsScreen() {
   const productList = useSelector((state) => state.productList);
   const { loading, products, error } = productList;
 
-  const userSignin = useSelector((state) => state.userSignin);
-  const { userInfo } = userSignin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { userInfo } = userDetails;
 
   const productSave = useSelector((state) => state.productSave);
   const {

@@ -30,6 +30,8 @@ function Paginate(props) {
       }
     }
   }
+  console.log('props.page', props.page)
+  console.log('pageMax', pageMax)
   return (
     <div className="paginate">
       <div className="paginate-flex">
@@ -56,10 +58,10 @@ function Paginate(props) {
         )}
         <CustomLink loading updateSamePage
           className={`paginate-item paginate-next ${
-            props.page + 1 >= pageMax ? "disabled" : ""
+            props.page + 1 > pageMax ? "disabled" : ""
           }`}
           to={setSearchParams(
-              props.page + 1 >= pageMax ? pageMax : props.page + 1,
+              props.page + 1 > pageMax ? pageMax : props.page + 1,
               props.path
             )
           }

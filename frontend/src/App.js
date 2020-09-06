@@ -251,8 +251,8 @@ function App() {
               exact
               render={(props) => <HomeScreen {...props} />}
             />
-            <Route path="/404" component={NotFoundScreen} />
-            <Redirect to="/404" />
+            {/* <Route path="/404" component={NotFoundScreen} />
+            <Redirect to="/404" /> */}
           </Suspense>
         </main>
         <footer className="footer">All right reserved.</footer>
