@@ -1,12 +1,9 @@
 import axios from "axios";
 import {
-  USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGIN_FAIL,
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
-  USER_REGISTER_REQUEST,
-  USER_AUTH_REQUEST,
   USER_AUTH_SUCCESS,
   USER_AUTH_FAIL,
   USER_LOGOUT_FAIL,
@@ -15,7 +12,6 @@ import { push } from "connected-react-router";
 const login = (username, password, kmLoggedIn, rememberMe) => async (
   dispatch
 ) => {
-  dispatch({ type: USER_LOGIN_REQUEST });
   if (rememberMe) {
     localStorage.setItem("remMe", JSON.stringify({ username: username }));
   } else {
@@ -49,10 +45,6 @@ const logout = () => async (dispatch) => {
 };
 
 const register = (userName, name, email, password) => async (dispatch) => {
-  dispatch({
-    type: USER_REGISTER_REQUEST,
-    payload: { userName, email, name, password },
-  });
   try {
     const { data } = await axios.post(
       "/api/users/register",

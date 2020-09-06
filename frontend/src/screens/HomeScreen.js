@@ -40,7 +40,7 @@ function HomeScreen(props) {
   console.log("props HOME", props.location);
   console.log("loading HOME", loading);
   console.log("products", products);
-  return loading || loading === undefined ? (
+  return loading === undefined ? (
     <Fragment>
       <ul className="products">
         {[...Array(numOfItemsInPage).keys()].map((key) => {

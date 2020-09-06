@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, Suspense, lazy } from "react";
 import "./App.css";
-import { Route, withRouter, Link } from "react-router-dom";
+import { Route, withRouter, Link, Redirect } from "react-router-dom";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -16,6 +16,8 @@ import { CATEGORIES } from "./constants/categoryConstants";
 import LoadingBar from "react-top-loading-bar";
 import CustomLink from "./components/CustomLink";
 import { logout } from "./actions/userActions";
+import Paginate from "./components/Paginate";
+import NotFoundScreen from "./screens/NotFoundScreen";
 export const LoadContext = React.createContext();
 const HomeScreen = lazy(() => import("./screens/HomeScreen"));
 function App() {
@@ -168,9 +170,9 @@ function App() {
               </div>
             ) : (
               <div>
-              <CustomLink loading to="/login">
-                Login
-              </CustomLink>
+                <CustomLink loading to="/login">
+                  Login
+                </CustomLink>
               </div>
             )}
             <div className="cart-tow">
@@ -249,6 +251,8 @@ function App() {
               exact
               render={(props) => <HomeScreen {...props} />}
             />
+            <Route path="/404" component={NotFoundScreen} />
+            <Redirect to="/404" />
           </Suspense>
         </main>
         <footer className="footer">All right reserved.</footer>
