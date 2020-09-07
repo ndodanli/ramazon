@@ -18,6 +18,7 @@ import CustomLink from "./components/CustomLink";
 import { logout } from "./actions/userActions";
 import Paginate from "./components/Paginate";
 import NotFoundScreen from "./screens/NotFoundScreen";
+import { push } from "connected-react-router";
 export const LoadContext = React.createContext();
 const HomeScreen = lazy(() => import("./screens/HomeScreen"));
 function App() {
@@ -25,7 +26,7 @@ function App() {
   const [updateSamePage, setUpdateSamePage] = useState(false);
   const [preventFirstRender, setPreventFirstRender] = useState(true);
   const userDetails = useSelector((state) => state.userDetails);
-  const { userInfo } = userDetails;
+  const { userInfo, loading:userInfoLoading } = userDetails;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -113,14 +114,15 @@ function App() {
     }
   };
   const handleCategory = (newRelativePathQuery) => {
-    window.history.pushState(null, "", newRelativePathQuery);
+    // window.history.pushState(null, "", newRelativePathQuery);
     // window.location.search = searchParams.toString(); //causes reload page
+    dispatch(push(newRelativePathQuery))
   };
 
   const handleLogout = () => {
     dispatch(logout());
   };
-
+  console.log('userInfo APP', userInfo)
   return (
     <LoadContext.Provider
       value={{
@@ -168,7 +170,7 @@ function App() {
                   </div>
                 </div>
               </div>
-            ) : (
+            ) : userInfoLoading === false &&(
               <div>
                 <CustomLink loading to="/login">
                   Login

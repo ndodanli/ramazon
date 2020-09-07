@@ -11,19 +11,22 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const app = express();
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require("connect-mongo")(session);
 
 dotenv.config();
 
 const mongodbUrl = config.MONGODB_URL;
 const sessionSecret = config.SESSION_SECRET;
- mongoose.connect(mongodbUrl, {
+mongoose.connect(mongodbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
-})
+});
 
-const sessionStore = new MongoStore({ mongooseConnection: mongoose.connection, collection: 'sessions' })
+const sessionStore = new MongoStore({
+  mongooseConnection: mongoose.connection,
+  collection: "sessions",
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,10 +42,10 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
-    store:sessionStore,
-    cookie:{
-      maxAge:  60 * 60 * 1000
-    }
+    store: sessionStore,
+    cookie: {
+      maxAge: 60 * 60 * 1000,
+    },
   })
 );
 app.use(passport.initialize());

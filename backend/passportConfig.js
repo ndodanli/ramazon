@@ -21,10 +21,11 @@ module.exports = function (passport) {
   );
 
   passport.serializeUser((user, cb) => {
-    cb(null, user.id);  
+    cb(null, user.id);
   });
   passport.deserializeUser((id, cb) => {
-    User.findOne({ _id: id }, (err, user) => {  //query database cause user's information can be change while session
+    User.findOne({ _id: id }, (err, user) => {
+      //query database cause user's information can be change while session
       cb(err, user);
     });
   });

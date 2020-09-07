@@ -6,7 +6,8 @@ import Paginate from "../components/Paginate";
 import { LoadContext } from "../App";
 import CustomLink from "../components/CustomLink";
 import withAuthentication from "../components/withAuthentication";
-
+import Cookie from "js-cookie";
+import { getToken, getInfo, isAuth } from "../util";
 function HomeScreen(props) {
   console.log("props", props);
   const preventFirstRender = useRef(true);
@@ -14,7 +15,6 @@ function HomeScreen(props) {
   const { products, totalItemCount, loading, error } = productList;
   const userDetails = useSelector((state) => state.userDetails);
   const { userInfo } = userDetails;
-  console.log("userInfo HOME", userInfo);
   const searchParams = getParams(window.location.search);
   const { loadRef } = useContext(LoadContext);
   const numOfItemsInPage = 32,
