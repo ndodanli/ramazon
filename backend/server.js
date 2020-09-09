@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoute from "./routes/userRoute";
 import productRoute from "./routes/productRoute";
+import pool from "./db"
 const cors = require("cors");
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
@@ -12,6 +13,7 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const app = express();
 const MongoStore = require("connect-mongo")(session);
+
 
 dotenv.config();
 
@@ -54,7 +56,13 @@ require("./passportConfig")(passport);
 
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
-
+app.post("/api/testPost", async (req, res) => {
+  try {
+    
+  } catch (error) {
+    console.log('error', error)
+  }
+} )
 app.get("/user", (req, res) => {
   res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
 });
