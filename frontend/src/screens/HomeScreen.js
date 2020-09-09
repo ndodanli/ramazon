@@ -6,7 +6,7 @@ import Paginate from "../components/Paginate";
 import { LoadContext } from "../App";
 import CustomLink from "../components/CustomLink";
 import withAuthentication from "../components/withAuthentication";
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 import { getToken, getInfo, isAuth } from "../util";
 function HomeScreen(props) {
   console.log("props", props);

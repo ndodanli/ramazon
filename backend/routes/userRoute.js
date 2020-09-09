@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/userModel";
 import passPortConfig from "../passportConfig";
 import { getToken, isAuth } from "../util";
-import Cookie from "js-cookie"
+import Cookies from "js-cookie"
 const router = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
@@ -16,9 +16,7 @@ router.post("/login", (req, res, next) => {
         if (err) res.status(500).send({ message: "Error while logging in!" });
         if (req.body.kmLoggedIn)
           req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-        console.log("getToken(user)", typeof(getToken(user)));
-        Cookie.set("testJWT", getToken(user).toString());
-        Cookie.set("TEST", JSON.stringify({testValue:"testValueString"}));
+          Cookies.set("testJWT", "dsadsa");
         res.send(req.isAuthenticated());
       });
     }
