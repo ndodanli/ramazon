@@ -9,9 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasMany(models.Product, {
-        //  foreignKey: "user_id",
         as: "product",
-        onDelete: "CASCADE",
       });
     }
   }
