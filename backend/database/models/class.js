@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Class.belongsToMany(models.Student, {through:"ClassStudent"})
     }
   };
   Class.init({
@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     floor: DataTypes.INTEGER
   }, {
     sequelize,
+    freezeTableName:true,
     modelName: 'Class',
   });
   return Class;

@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsTo(models.User, {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        allowNull:false,
+        allowNull: false,
       });
     }
   }
   Product.init(
     {
-      name: DataTypes.STRING,
+      name: { type: DataTypes.STRING , allowNull:false},
       image: DataTypes.STRING,
       brand: DataTypes.STRING,
       price: DataTypes.INTEGER,
@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      freezeTableName:true,
       modelName: "Product",
     }
   );

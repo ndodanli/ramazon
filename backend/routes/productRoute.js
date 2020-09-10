@@ -1,12 +1,43 @@
 import express from "express";
 import Product from "../models/productModel";
 import { isAuth, isAdmin } from "../util";
+import db from "../database/models";
 const router = express.Router();
 const cors = require("cors");
 router.use(cors());
 
-
 router.post("/home", async (req, res) => {
+  console.log("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+  // const jane = await db["User"].create({
+  //   username: "TEST",
+  //   password: "dsa",
+  //   Name: "Jane",
+  //   Email: "das1",
+  //   IsAdmin: false,
+  //   TestValueUnder: new Array(["dasd", "214"]),
+  //   TestValueTwo: new Date(),
+  // });
+  // const product = await db["Product"].create({
+  //   name: "Product24",
+  //   price: 15,
+  //   rating: 26,
+  // });
+  // const incrementResult = await product.increment('price', {by:5})
+  // const incrementResult = await product.increment({ price: 44, rating: 10 });
+  // console.log(jane.Name); // "Jane"
+  // jane.Name = "Ada";
+  // the name is still "Jane" in the database
+  // await jane.destroy();
+  // console.log("incrementResult", incrementResult);
+  // console.log(jane.Name); // "Jane"
+
+
+  // const select = await db["User"].findAll({
+  //   attributes: ['Name', 'id']
+  // })
+  const select = await db["User"].findByPk(5)
+  console.log('select', select)
+  // console.log('JSON.stringify(select)', JSON.stringify(select, null, 3))
   const searchValue = req.body.searchParams.q,
     page =
       req.body.searchParams.page - 1 < 0 ? 0 : req.body.searchParams.page - 1,
@@ -17,13 +48,13 @@ router.post("/home", async (req, res) => {
     name: { $regex: searchValue, $options: "i" },
     category: { $regex: category, $options: "i" },
   }).countDocuments(function (err, count) {
-    totalItemCount = count;
+    totalItemCount = count; 
   });
   await Product.find({
     name: { $regex: searchValue, $options: "i" },
     category: { $regex: category, $options: "i" },
   })
-    .sort({ price: "asc" })
+    .sort({ price: "asc" }) 
     .limit(numOfItemsInPage)
     .skip(numOfItemsInPage * page)
     .then((result) => {
@@ -45,7 +76,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 router.post("/", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const product = new Product({
     name: req.body.name,
     price: req.body.price,
@@ -54,7 +85,7 @@ router.post("/", async (req, res) => {
     category: req.body.category,
     countInStock: req.body.countInStock,
     description: req.body.description,
-  });
+  }); 
   const newProduct = await product.save();
   if (newProduct) {
     return res
@@ -85,7 +116,5 @@ router.put("/:id", isAuth, isAdmin, async (req, res) => {
   return res.status(500).send({ message: "Error in Updating Product" });
 });
 
-router.delete("/:id", async (req, res) => {
-  const deletedProduct = await Product.deleteMany({});
-});
+router.delete("/:id", async () => {});
 export default router;

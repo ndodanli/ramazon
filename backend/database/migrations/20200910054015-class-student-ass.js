@@ -7,7 +7,6 @@ module.exports = {
       classId: {
         type:Sequelize.INTEGER,
         primaryKey:true,
-        onDelete: "CASCADE"
       },
       studentId: {
         type: Sequelize.INTEGER,
