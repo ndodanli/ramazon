@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoute from "./routes/userRoute";
 import productRoute from "./routes/productRoute";
-import pool from "./db"
 const cors = require("cors");
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
@@ -13,9 +12,19 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const app = express();
 const MongoStore = require("connect-mongo")(session);
-
-
+const db = require("./database/models/index");
+const pg = require("pg")
 dotenv.config();
+
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 
 const mongodbUrl = config.MONGODB_URL;
 const sessionSecret = config.SESSION_SECRET;
@@ -58,11 +67,10 @@ app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.post("/api/testPost", async (req, res) => {
   try {
-    
   } catch (error) {
-    console.log('error', error)
+    console.log("error", error);
   }
-} )
+});
 app.get("/user", (req, res) => {
   res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
 });
@@ -75,5 +83,5 @@ app.get("/user", (req, res) => {
 // app.get("/api/products", (req, res) => {
 //   res.send(data.products);
 // });
-
+     
 app.listen(5000, () => console.log("Server started at http://localhost:5000"));

@@ -22,7 +22,7 @@ module.exports = {
     await queryInterface.bulkInsert("ClassStudents", [
       {
         classId: 1,
-        studentId: 3,
+        studentId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

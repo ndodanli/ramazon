@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Product.belongsTo(models.User, {
-        foreignKey: "user_id",
-        as: "creator",
+        onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        allowNull:false,
       });
     }
   }

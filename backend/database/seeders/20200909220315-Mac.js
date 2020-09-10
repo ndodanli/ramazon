@@ -15,7 +15,7 @@ module.exports = {
       {
         macAddress: "A2:G2:H6:Y3",
         location: "location1",
-        computerId: 13,
+        computerId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
