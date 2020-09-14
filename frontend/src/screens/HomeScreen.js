@@ -26,8 +26,7 @@ function HomeScreen(props) {
   // console.log("productList", productList);
   // console.log("loading STATE HOME SCREEN", loading);
   useEffect(() => {
-    console.log("HOME SCREEN USEEFFECT []");
-    dispatch(listProduct(searchParams, numOfItemsInPage));
+
   }, []);
   useEffect(() => {
     console.log("HOME SCREEN USEEFFECT LOADING");

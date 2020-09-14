@@ -39,25 +39,30 @@ router.get("/logout", (req, res) => {
   });
 });
 router.post("/register", async (req, res) => {
-  const User = db.sequelize.model["User"];
-  User.findOne(
-    { username: req.body.userName },
-    async (err, doc) => {
-      if (err) throw err;
-      if (doc) res.send("User already exists");
-      if (!doc) {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const newUser = new User({
-          username: req.body.userName,
-          name: req.body.name,
-          email: req.body.email,
-          password: hashedPassword,
-        });
-        await User.create(newUser);
-        res.send("User Created");
-      }
+  console.log("REGISTER POST");
+  const User = db.sequelize.models["User"];
+  await User.findOne({
+    where: { username: req.body.userName },
+  }).catch(function (err){
+    throw err;
+  });
+  async (err, doc) => {
+    console.log("err", err);
+    console.log("doc", doc);
+    if (err) throw err;
+    if (doc) res.send("User already exists");
+    if (!doc) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const newUser = new User({
+        username: req.body.userName,
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+      });
+      await User.create(newUser);
+      res.send("User Created");
     }
-  );
+  };
 });
 router.get("/createadmin", async (req, res) => {
   try {

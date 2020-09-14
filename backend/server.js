@@ -1,7 +1,6 @@
 import express from "express";
 import config from "./config";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import userRoute from "./routes/userRoute";
 import productRoute from "./routes/productRoute";
 import { sequelize } from "./database/models/index";
@@ -24,15 +23,15 @@ db.sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
-//  db.sequelize.sync({ alter: true });
+ db.sequelize.sync({ alter: true });
 
 app.set(
   (async function test() {
-    await Object.keys(db.sequelize.models).forEach((currentItem) => {
-      console.log("db.models[currentItem]", db.sequelize.models[currentItem]);
-      db.sequelize.models[currentItem]
-        .sync({ alter: true });
-    });
+    // await Object.keys(db.sequelize.models).forEach((currentItem) => {
+    //   console.log("db.models[currentItem]", db.sequelize.models[currentItem]);
+    //   db.sequelize.models[currentItem]
+    //     .sync({ alter: true });
+    // });
     console.log("db.models", db.sequelize.models);
     // await db.sequelize.createSchema('TestSchema').then(async () => {
     // });
@@ -50,7 +49,7 @@ app.use(
   })
 );
 const sessionStore = new SequelizeStore({
-  db: sequelize,
+  db: db.sequelize,
 })
 app.use(cookieParser(sessionSecret));
 app.use(
