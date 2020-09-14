@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRoute from "./routes/userRoute";
 import productRoute from "./routes/productRoute";
+import { sequelize } from "./database/models/index";
 const cors = require("cors");
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
@@ -11,9 +12,8 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const app = express();
-const MongoStore = require("connect-mongo")(session);
 const db = require("./database/models/index");
-
+let SequelizeStore = require("connect-session-sequelize")(session.Store);
 dotenv.config();
 
 db.sequelize
@@ -24,32 +24,23 @@ db.sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
-// db.sequelize.sync({ alter: true });
+//  db.sequelize.sync({ alter: true });
 
-const mongodbUrl = config.MONGODB_URL;
+app.set(
+  (async function test() {
+    await Object.keys(db.sequelize.models).forEach((currentItem) => {
+      console.log("db.models[currentItem]", db.sequelize.models[currentItem]);
+      db.sequelize.models[currentItem]
+        .sync({ alter: true });
+    });
+    console.log("db.models", db.sequelize.models);
+    // await db.sequelize.createSchema('TestSchema').then(async () => {
+    // });
+  })()
+);
+
 const sessionSecret = config.SESSION_SECRET;
-mongoose.connect(mongodbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
-// async function create() {
-//   console.log("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-//   const jane = await User.create({ username: "JaneUserName", Name: "Jane" });
-//   console.log(jane.name); // "Jane"
-//   jane.name = "Ada";
-//   // the name is still "Jane" in the database
-//   await jane.reload();
-//   console.log(jane.name); // "Jane"
-// }
 
-// app.use(create());
-
-const sessionStore = new MongoStore({
-  mongooseConnection: mongoose.connection,
-  collection: "sessions",
-});
- 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -57,7 +48,10 @@ app.use(
     origin: "http://localhost:3000", // <-- location of the react app were connecting to
     credentials: true,
   })
-);  
+);
+const sessionStore = new SequelizeStore({
+  db: sequelize,
+})
 app.use(cookieParser(sessionSecret));
 app.use(
   session({
@@ -93,8 +87,8 @@ app.get("/user", (req, res) => {
 // });
 // app.get("/api/products", (req, res) => {
 //   res.send(data.products);
-// });  
- 
+// });
+
 app.listen(5000, () => console.log("Server started at http://localhost:5000"));
-process.on('uncaughtException', () => console.log("crashed"))
-process.on('SIGTERM', () => console.log('on kill'))
+process.on("uncaughtException", () => console.log("crashed"));
+process.on("SIGTERM", () => console.log("on kill"));

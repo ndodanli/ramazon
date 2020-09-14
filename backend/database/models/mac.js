@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     location: DataTypes.STRING
   }, {
     sequelize,
+    freezeTableName: true,
     modelName: 'Mac',
   });
   return Mac;

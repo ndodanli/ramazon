@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     price: DataTypes.INTEGER
   }, {
     sequelize,
+    freezeTableName: true,
     modelName: 'Computer',
   });
   return Computer;

@@ -2,10 +2,11 @@ import express from "express";
 import User from "../models/userModel";
 import passPortConfig from "../passportConfig";
 import { getToken, isAuth } from "../util";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 const router = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
+const db = require("../database/models/index");
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
@@ -16,7 +17,7 @@ router.post("/login", (req, res, next) => {
         if (err) res.status(500).send({ message: "Error while logging in!" });
         if (req.body.kmLoggedIn)
           req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-          Cookies.set("testJWT", "dsadsa");
+        Cookies.set("testJWT", "dsadsa");
         res.send(req.isAuthenticated());
       });
     }
@@ -38,8 +39,9 @@ router.get("/logout", (req, res) => {
   });
 });
 router.post("/register", async (req, res) => {
+  const User = db.sequelize.model["User"];
   User.findOne(
-    { username: req.body.userName, email: req.body.email },
+    { username: req.body.userName },
     async (err, doc) => {
       if (err) throw err;
       if (doc) res.send("User already exists");
@@ -51,7 +53,7 @@ router.post("/register", async (req, res) => {
           email: req.body.email,
           password: hashedPassword,
         });
-        await newUser.save();
+        await User.create(newUser);
         res.send("User Created");
       }
     }
