@@ -9,11 +9,11 @@ import {
   USER_LOGOUT_FAIL,
 } from "../constants/userConstants";
 import { push } from "connected-react-router";
-const login = (username, password, kmLoggedIn, rememberMe) => async (
+const login = (Username, Password, kmLoggedIn, rememberMe) => async (
   dispatch
 ) => {
   if (rememberMe) {
-    localStorage.setItem("remMe", JSON.stringify({ username: username }));
+    localStorage.setItem("remMe", JSON.stringify({ Username: Username }));
   } else {
     localStorage.removeItem("remMe");
   }
@@ -21,8 +21,8 @@ const login = (username, password, kmLoggedIn, rememberMe) => async (
     const { data } = await axios.post(
       "api/users/login",
       {
-        username: username,
-        password: password,
+        Username: Username,
+        Password: Password,
         kmLoggedIn: kmLoggedIn,
       },
       { withCredentials: true }

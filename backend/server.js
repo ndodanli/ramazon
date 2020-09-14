@@ -27,12 +27,14 @@ db.sequelize
 
 app.set(
   (async function test() {
+    // console.log('TESTTTTTTTTTTTTTTTTTTTTTTTTT')
+    // const user = await db.sequelize.models['User'].findOne({where:{id:1}, raw:true})
+    // console.log('user', user)
     // await Object.keys(db.sequelize.models).forEach((currentItem) => {
     //   console.log("db.models[currentItem]", db.sequelize.models[currentItem]);
     //   db.sequelize.models[currentItem]
     //     .sync({ alter: true });
     // });
-    console.log("db.models", db.sequelize.models);
     // await db.sequelize.createSchema('TestSchema').then(async () => {
     // });
   })()
@@ -50,6 +52,8 @@ app.use(
 );
 const sessionStore = new SequelizeStore({
   db: db.sequelize,
+  // checkExpirationInterval: 15 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
+  // expiration: 24 * 60 * 60 * 1000  // The maximum age (in milliseconds) of a valid session.
 })
 app.use(cookieParser(sessionSecret));
 app.use(

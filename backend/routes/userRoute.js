@@ -10,14 +10,15 @@ const db = require("../database/models/index");
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
+    console.log('user', user)
     if (err) throw err;
     if (!user) res.send("No User Exists");
     else {
       req.logIn(user, (err) => {
         if (err) res.status(500).send({ message: "Error while logging in!" });
         if (req.body.kmLoggedIn)
-          req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-        Cookies.set("testJWT", "dsadsa");
+          req.session.cookie.maxAge = 10 * 1000;
+        // Cookies.set("testJWT", "dsadsa");
         res.send(req.isAuthenticated());
       });
     }
@@ -30,7 +31,7 @@ router.get("/user", (req, res, next) => {
 });
 router.get("/logout", (req, res) => {
   req.logOut();
-  req.session.destroy(function (err) {
+  req.session.destroy(function (err) {  
     if (err) {
       return next(err);
     }
@@ -40,29 +41,24 @@ router.get("/logout", (req, res) => {
 });
 router.post("/register", async (req, res) => {
   console.log("REGISTER POST");
-  const User = db.sequelize.models["User"];
-  await User.findOne({
-    where: { username: req.body.userName },
-  }).catch(function (err){
-    throw err;
-  });
-  async (err, doc) => {
-    console.log("err", err);
-    console.log("doc", doc);
-    if (err) throw err;
-    if (doc) res.send("User already exists");
-    if (!doc) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const newUser = new User({
-        username: req.body.userName,
-        name: req.body.name,
-        email: req.body.email,
-        password: hashedPassword,
-      });
-      await User.create(newUser);
-      res.send("User Created");
-    }
-  };
+  const user = await db.sequelize.models["User"]
+    .findOne({
+      where: { Username: req.body.userName },
+    })
+    .catch(function (err) {
+      throw err;
+    });
+  if (user) res.send("User already exists");
+  if (!user) {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    await db.sequelize.models["User"].create({
+      Username: req.body.userName,
+      Name: req.body.name,
+      Email: req.body.email,
+      Password: hashedPassword,
+    });
+    res.send("User Created");
+  }
 });
 router.get("/createadmin", async (req, res) => {
   try {

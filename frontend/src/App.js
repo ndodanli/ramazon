@@ -153,7 +153,7 @@ function App() {
             <Route render={(props) => <SearchBar {...props} />} />
           </div>
           <div className="header-links">
-            {userInfo?._id ? (
+            {userInfo?.id ? (
               <div className="account-section">
                 <button className="account-button">Account</button>
                 <div className="account-content">
@@ -161,7 +161,7 @@ function App() {
                   <div>
                     <div className="user-info-section">
                       <CustomLink className="profile" loading to="/profile">
-                        {userInfo.name}
+                        {userInfo.Name}
                       </CustomLink>
                     </div>
                     <button className="logout-button" onClick={handleLogout}>

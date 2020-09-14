@@ -30,9 +30,9 @@ function LoginScreen(props) {
   useEffect(() => {
     const remMe = JSON.parse(localStorage.getItem("remMe"));
     if (remMe) {
-      setUserName(remMe.username);
+      setUserName(remMe.Username);
     }
-    if (userInfo?._id) {
+    if (userInfo?.id) {
       dispatch(push('/'));
     }
   }, []);

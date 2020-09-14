@@ -7,6 +7,7 @@ const cors = require("cors");
 router.use(cors());
 
 router.post("/home", async (req, res) => {
+
   const searchValue = req.body.searchParams.q,
     page =
       req.body.searchParams.page - 1 < 0 ? 0 : req.body.searchParams.page - 1,

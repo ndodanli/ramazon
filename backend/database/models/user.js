@@ -2,8 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-
-    getName(){
+    getName() {
       return this.Name;
     }
     /**
@@ -17,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
-      username: DataTypes.STRING,
-      password: {
+      Username: DataTypes.STRING,
+      Password: {
         type: DataTypes.STRING,
         comment: "This is a column name that has a comment",
       },
