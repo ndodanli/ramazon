@@ -14,10 +14,10 @@ module.exports = {
     // });
     
     //One-to-one
-    await queryInterface.addColumn("Macs", "computerId", {
+    await queryInterface.addColumn("Mac", "FK_computer_id", {
       type: Sequelize.INTEGER,
       references: {
-        model: "Computers",
+        model: "Computer",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -28,7 +28,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-     await queryInterface.removeColumn("Macs", "computerId");
+     await queryInterface.removeColumn("Mac", "FK_computer_id");
     // await queryInterface.removeColumn("Computers", "macId");
   },
 };

@@ -19,6 +19,8 @@ import { logout } from "./actions/userActions";
 import Paginate from "./components/Paginate";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import { push } from "connected-react-router";
+import ChatRoomScreen from "./screens/ChatRoomScreen";
+import ChatScreen from "./screens/ChatScreen";
 export const LoadContext = React.createContext();
 const HomeScreen = lazy(() => import("./screens/HomeScreen"));
 function App() {
@@ -253,6 +255,8 @@ function App() {
               exact
               render={(props) => <HomeScreen {...props} />}
             />
+            <Route path="/chat" component={ChatScreen} />
+            <Route path="/chatroom" component={ChatRoomScreen} />
             {/* <Route path="/404" component={NotFoundScreen} />
             <Redirect to="/404" /> */}
           </Suspense>

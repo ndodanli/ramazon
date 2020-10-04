@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { Switch } from "react-router-dom";
+import { Switch } from "react-router";
 import { ConnectedRouter } from "connected-react-router";
 import configureStore, { history } from "./configureStore";
 import Cookie from "js-cookie";

@@ -10,15 +10,16 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Mac.belongsTo(models.Computer)
     }
   };
   Mac.init({
-    macAddress: DataTypes.STRING,
+    mac_address: DataTypes.STRING,
     location: DataTypes.STRING
   }, {
     sequelize,
     freezeTableName: true,
+    underscored: true,
     modelName: 'Mac',
   });
   return Mac;

@@ -6,13 +6,12 @@ const db = require("./database/models/index");
 module.exports = function (passport) {
   passport.use(
     new localStrategy({
-      usernameField: 'Username',
+      usernameField: 'Username', 
       passwordField: 'Password',
     },(Username, Password, cb) => {
       const user = db.sequelize.models["User"]
         .findOne({ where: { Username: Username }, raw: true })
         .then((user) => {
-          console.log("res", user);
           if (!user) return cb(null, false);
           bcrypt.compare(Password, user.Password, (err, result) => {
             if (err) throw err;

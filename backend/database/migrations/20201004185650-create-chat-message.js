@@ -1,30 +1,29 @@
 "use strict";
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("User", {
+    await queryInterface.createTable("ChatMessages", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      username: {
+      autor: {
         type: Sequelize.STRING,
       },
-      password: {
+      message: {
         type: Sequelize.STRING,
       },
-      name: {
-        type: Sequelize.STRING,
+      FK_chat_room_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "ChatRoom",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING,
-      },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-      },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -36,7 +35,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("User", {
-    });
+    await queryInterface.dropTable("ChatMessages");
   },
 };

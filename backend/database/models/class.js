@@ -15,11 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   };
   Class.init({
     name: DataTypes.STRING,
-    floor: DataTypes.INTEGER
+    floor: DataTypes.INTEGER 
   }, {
     sequelize,
     freezeTableName:true,
-    modelName: 'Class',
-  });
+    underscored: true,
+    modelName: 'Class', 
+   });
   return Class;
 };

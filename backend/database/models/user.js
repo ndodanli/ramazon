@@ -16,20 +16,21 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
-      Username: DataTypes.STRING,
-      Password: {
+      username: DataTypes.STRING,
+      password: {
         type: DataTypes.STRING,
-        comment: "This is a column name that has a comment",
+        comment: "User's password",
       },
-      Name: DataTypes.STRING,
-      Email: DataTypes.STRING,
-      IsAdmin: DataTypes.BOOLEAN,
-      TestValueUnder: DataTypes.ARRAY(DataTypes.STRING),
-      TestValueTwo: DataTypes.DATE,
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      is_admin: DataTypes.BOOLEAN,
+      test_value_under: DataTypes.ARRAY(DataTypes.STRING),
+      test_value_two: DataTypes.DATE,
     },
     {
       sequelize,
       freezeTableName: true,
+      underscored: true,
       modelName: "User",
     }
   );

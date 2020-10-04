@@ -14,11 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Computer.init({
-    modelName: DataTypes.STRING,
+    model_name: DataTypes.STRING,
     price: DataTypes.INTEGER
   }, {
     sequelize,
     freezeTableName: true,
+    underscored: true,
     modelName: 'Computer',
   });
   return Computer;

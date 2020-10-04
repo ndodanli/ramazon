@@ -2,15 +2,23 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("ClassStudents",
+    await queryInterface.createTable("ClassStudent",
     {
-      classId: {
+      FK_user_id: {
         type:Sequelize.INTEGER,
         primaryKey:true,
+        references: {
+          model: "User",
+          key: "id",
+        }
       },
-      studentId: {
+      FK_student_id: {
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        references: {
+          model: "Student",
+          key: "id",
+        }
       },
       createdAt: {
         allowNull: false,
@@ -24,6 +32,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("ClassStudents")
+    await queryInterface.dropTable("ClassStudent")
   }
 };

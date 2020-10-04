@@ -786,3 +786,10 @@ tbody {
   color: rgba(17, 17, 73, 0.9);
   font-size: 2.5em;
 }
+.chat-room-page {
+  width: 90vw;
+  margin: 0 auto;
+}.chat-box {
+  height: calc(100vh - 300px);
+  overflow-y: scroll;
+}

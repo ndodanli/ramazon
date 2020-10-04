@@ -9,6 +9,8 @@ const bcrypt = require("bcryptjs");
 const db = require("../database/models/index");
 
 router.post("/login", (req, res, next) => {
+  console.log('REGISTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR')
+  console.log('req.isAuthenticated()', req.isAuthenticated())
   passport.authenticate("local", (err, user, info) => {
     console.log('user', user)
     if (err) throw err;
@@ -17,7 +19,7 @@ router.post("/login", (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) res.status(500).send({ message: "Error while logging in!" });
         if (req.body.kmLoggedIn)
-          req.session.cookie.maxAge = 10 * 1000;
+          req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
         // Cookies.set("testJWT", "dsadsa");
         res.send(req.isAuthenticated());
       });
@@ -26,6 +28,7 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/user", (req, res, next) => {
+
   if (req.user) res.send(req.user);
   else res.send({});
 });

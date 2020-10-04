@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       image: DataTypes.STRING,
       brand: DataTypes.STRING,
       price: DataTypes.INTEGER,
+      creator: DataTypes.STRING,
       category: DataTypes.STRING,
       count_in_stock: DataTypes.INTEGER,
       description: DataTypes.STRING,
@@ -30,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       freezeTableName:true,
+      underscored: true,
       modelName: "Product",
     }
   );
