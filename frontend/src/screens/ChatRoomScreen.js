@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import * as yup from "yup";
 import io from "socket.io-client";
 import { getChatRoomMessages, getChatRooms } from "../requests";
-const SOCKET_IO_URL = "http://localhost:5000";
+const SOCKET_IO_URL = "http://localhost:5000/chat";
 const socket = io(SOCKET_IO_URL);
 const getChatData = () => {
   return JSON.parse(localStorage.getItem("chatData"));
@@ -17,7 +17,7 @@ function ChatRoomScreen() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [rooms, setRooms] = useState([]);
-  const chatBoxRef = useRef(null)
+  const chatBoxRef = useRef(null);
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     console.log("message", message);
@@ -32,9 +32,12 @@ function ChatRoomScreen() {
 
   const connectToRoom = () => {
     socket.on("connect", (data) => {
+      console.log("CONNECT");
+      console.log("data", data);
       socket.emit("join", getChatData().chatRoomName);
     });
     socket.on("newMessage", (data) => {
+      console.log("newMessage");
       getMessages();
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     });
@@ -57,7 +60,10 @@ function ChatRoomScreen() {
       getRooms();
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-  });
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
   return (
     <div className="chat-room-page">
       <h1>

@@ -31,8 +31,9 @@ const http = require("http");
 const server = app.listen(5000);
 const io = require("socket.io")(server);
 
-io.on("connection", (socket) => {
+io.of("/chat").on("connection", (socket) => {
   socket.on("join", async (room) => {
+    console.log('room', room)
     socket.join(room);
     io.emit("roomJoined", room);
   });
@@ -48,7 +49,9 @@ io.on("connection", (socket) => {
       author: author,
       message: message,
     });
-    io.emit("newMessage", chatMessage);
+    console.log('data', data)
+    io.of("/chat").in(data.chatRoomName).emit("newMessage", chatMessage);
+    io.
   });
 });
 
